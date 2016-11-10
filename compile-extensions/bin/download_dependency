@@ -26,6 +26,7 @@ original_url      = ARGV[0]
 install_directory = ARGV[1]
 if ARGV.size == 3
   default_swift_version = ARGV[2]
+  requested_swift_version = original_url.gsub(/.tar.gz/, '')
 end
 
 # Define utility functions
@@ -49,26 +50,30 @@ debug "DEBUG: dependency_md5 '#{dependency_md5}'"
 
 if translated_uri.nil?
   # Assumption is that the requested dependency is a Swift development or release snapshot
-  custom_swift_version = original_url.gsub(/.tar.gz/, '')
   STDERR.puts "WARNING: You are requesting a custom version of Swift (defined in your .swift-version)"
   STDERR.puts "WARNING: Default supported Swift version: #{default_swift_version}"
-  STDERR.puts "WARNING: Custom Swift version for your app: #{custom_swift_version}"
+  STDERR.puts "WARNING: Requested Swift version for your app: #{requested_swift_version}"
   STDERR.puts "WARNING: The buildpack will attempt to download requested version from Swift.org"
 
   # Determine snapshot type, swift version, url...
-  if custom_swift_version.downcase.include? "development"
+  if requested_swift_version.downcase.include? "development"
     snapshot_type = "development"
   else
-    # Assuming release snapshot
-    snapshot_type = custom_swift_version.downcase
-    if !(snapshot_type.include? "release")
-      snapshot_type = "#{snapshot_type}-release"
-      custom_swift_version = "#{custom_swift_version}-RELEASE"
+    snapshot_type = requested_swift_version.downcase
+    if snapshot_type.include? "preview"
+      # Preview snapshot... nothing to update
+    else
+      # Assuming release snapshot
+      if !(snapshot_type.include? "release")
+        snapshot_type = "#{snapshot_type}-release"
+        requested_swift_version = "#{requested_swift_version}-RELEASE"
+      end
     end
   end
-  
-  swift_file = "#{custom_swift_version}-ubuntu14.04.tar.gz"
-  translated_uri = "https://swift.org/builds/#{snapshot_type}/ubuntu1404/#{custom_swift_version}/#{swift_file}"
+  debug "DEBUG: snapshot_type #{snapshot_type}"
+
+  swift_file = "#{requested_swift_version}-ubuntu14.04.tar.gz"
+  translated_uri = "https://swift.org/builds/#{snapshot_type}/ubuntu1404/#{requested_swift_version}/#{swift_file}"
   debug "DEBUG: Using the following URL for downloading the specified dependency: #{translated_uri}"
   status_code = `curl -I -s #{translated_uri} | head -n 1 | cut -d ' ' -f2`
   status_code = status_code.strip
@@ -79,14 +84,21 @@ if translated_uri.nil?
     STDERR.puts "ERROR: Could not find/download requested custom Swift version from Swift.org: #{translated_uri}"
     exit 3
   end
+else
+  if !(default_swift_version.nil? || default_swift_version.empty?) && !(default_swift_version.eql? requested_swift_version)
+    STDERR.puts "WARNING: Default supported Swift version: #{default_swift_version}"
+    STDERR.puts "WARNING: Requested Swift version for your app: #{requested_swift_version}"
+  end
 end
 
+in_cache = false
 if File.exist? cache_path
   file_path = File.join(cache_path, translated_uri.gsub(/[\/:]/, '_'))
   # Though this should not be needed, let's check that the dependency is actually found in the dependencies folder
   # If not found in the dependencies folder, we will not change the value of translated_uri and we will attempt to download it
   # This is useful if a dependency was manualy taken out of the dependencies folder
   if File.exist? file_path
+    in_cache = true
     debug "DEBUG: Dependency found: '#{file_path}'"
     translated_uri = "file://#{file_path}"
   end
@@ -96,10 +108,11 @@ end
 generated_md5 = Digest::MD5.file(file_location).hexdigest
 
 debug "DEBUG: generated_md5 '#{generated_md5}'"
-puts file_location
+#puts "#{file_location} #{in_cache}"
+puts in_cache
 
 if dependency_md5.nil?
-  debug "DEBUG: md5 value for dependency could not be validated; more than likely the dependency is not found in the MANIFEST file"
+  debug "DEBUG: md5 value for dependency could not be validated; more than likely the dependency is not found in the MANIFEST file."
   exit 0
 else
   if dependency_md5 == generated_md5
