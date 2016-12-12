@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 ##
 # Copyright IBM Corporation 2016
 #
@@ -14,26 +15,14 @@
 # limitations under the License.
 ##
 
-module Utils
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
-  class SimpleLogger
+require 'boot_script_finder'
 
-    class << self
-
-      def warning(msg)
-        $stderr.puts "Warning: #{msg}"
-      end
-
-      def error(msg)
-        $stderr.puts "Error: #{msg}"
-      end
-
-      def info(msg)
-        $stdout.puts msg.to_s
-      end
-
-    end
-
-  end
-
+begin
+  build_dir = ARGV[0]
+  build_dir += '/' if build_dir[-1] != '/'
+  puts BootScriptFinder.new(build_dir).find_boot_script
+rescue => e
+  puts ""
 end

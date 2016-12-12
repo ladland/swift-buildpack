@@ -14,26 +14,28 @@
 # limitations under the License.
 ##
 
-module Utils
+class BootScriptFinder
+  def initialize(app_dir)
+    @app_dir = app_dir
+  end
 
-  class SimpleLogger
+  def find_boot_script
+    procfile_file = @app_dir + 'Procfile'
+    start_cmd = ""
 
-    class << self
-
-      def warning(msg)
-        $stderr.puts "Warning: #{msg}"
+    if (File.exist?(procfile_file))
+      procfile_content = ''
+      File.open(procfile_file,'r') do |file|
+        while line = file.gets
+          procfile_content += line
+        end
       end
-
-      def error(msg)
-        $stderr.puts "Error: #{msg}"
+      if (matched = /web:\s+(.+)/.match(procfile_content))
+        start_cmd = matched[1]
       end
-
-      def info(msg)
-        $stdout.puts msg.to_s
-      end
-
     end
 
+    return start_cmd
   end
 
 end
