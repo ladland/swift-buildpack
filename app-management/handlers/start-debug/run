@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+# Encoding: utf-8
+# IBM WebSphere Application Server Liberty Buildpack
+# Copyright 2014 the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+require 'fileutils'
+require 'json'
+
+# directories
+INSTALL_DIR = File.expand_path('../../..', File.dirname(__FILE__)).freeze
+APP_MGMT_DIR = File.join(INSTALL_DIR, '.app-management').freeze
+
+$LOAD_PATH.unshift File.expand_path(APP_MGMT_DIR, __FILE__)
+
+require 'utils/droplet_utils'
+require 'utils/handler_utils.rb'
+
+def proxy_entry_value(type, backend_port, host, uri_prefix)
+  # Update the proxy config file with a tunnel
+  props = {}
+  props['type'] = type
+  props['backend'] = "127.0.0.1:#{backend_port}"
+  props['host'] = host
+  props['uri_prefix'] = uri_prefix
+  value = props.to_json
+  # Need to escape quotes to preserve them.
+  value.gsub!('"', '\"')
+end
+
+def backup_jvm(jvm_file, backup_dir)
+  file_name = File.basename(jvm_file)
+  backup_file = File.join(backup_dir, file_name)
+  FileUtils.mkdir_p(backup_dir)
+  return if File.exist?(backup_file)
+  FileUtils.cp(jvm_file, backup_file)
+end
+
+def update_jvm_options(jvm_file, port)
+  # Read contents of jvm.options and remove any existing debug-related properties. Then add our debug properties
+  file_contents = File.readlines(jvm_file)
+  exclude = Regexp.new('-Dwas.debug.mode|-Dcom.ibm.websphere.ras.inject.at.transform|-agentlib:jdwp')
+  file_contents.delete_if { |line| line =~ exclude }
+  file_contents << '-Dwas.debug.mode=true'
+  file_contents << '-Dcom.ibm.websphere.ras.inject.at.transform=true'
+  file_contents << "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=#{port}"
+
+  # Write contents back to jvm.option, overwriting existing content.
+  jvm_options = File.new(jvm_file, 'w')
+  jvm_options.puts(file_contents)
+  jvm_options.close
+end
+
+server_dir = DropletUtils.get_server_directory(INSTALL_DIR)
+config = Utils::HandlerUtils.get_configuration('debug')
+
+# backup and update the jvm.options file
+backup_dir = File.join(APP_MGMT_DIR, 'backup', 'debug')
+jvm_options_file = File.join(server_dir, 'jvm.options')
+backup_jvm(jvm_options_file, backup_dir)
+port = config['port'] || DropletUtils.find_port(7777, 8777)
+update_jvm_options(jvm_options_file, port)
+
+# add the proxy configuration
+exec(%(#{APP_MGMT_DIR}/scripts/add_proxy_entry debug #{proxy_entry_value('tunnel', port, '*', 'bluemix-tunnel/debug')}))
