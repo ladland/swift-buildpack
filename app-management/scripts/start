@@ -16,7 +16,7 @@
 ##
 
 if [ -z "$1" ]; then
-  echo "A port paramaeter is required!"
+  echo "A port parameter is required!"
   exit 1
 fi
 
@@ -33,6 +33,10 @@ app_management_dir=$(cd .app-management && pwd)
 
 echo "Starting app with '${NODE_EXECUTABLE} ${NODE_OPTS} ${BOOT_SCRIPT} ${NODE_ARGS}'"
 ${NODE_EXECUTABLE} ${NODE_OPTS} ${BOOT_SCRIPT} ${NODE_ARGS} &
+
+# The percent-delimited COMMAND is a template variable that will get updated with the proper values during staging.
+%COMMAND%
+
 
 pid=$!
 # Write the PID to a file

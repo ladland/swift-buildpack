@@ -54,6 +54,9 @@ function updateStartCommands() {
     echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
   fi
 
+  status "COMMAND1: %COMMAND%"
+  status "COMMAND1: $%COMMAND%"
+  status "COMMAND1: $COMMAND"
   # Update env vars used for dev mode
   #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
 }
