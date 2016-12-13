@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 ##
 # Copyright IBM Corporation 2016
 #
@@ -15,14 +14,28 @@
 # limitations under the License.
 ##
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+class StartCmdFinder
+  def initialize(app_dir)
+    @app_dir = app_dir
+  end
 
-require 'boot_script_finder'
+  def find_start_cmd
+    procfile_file = @app_dir + 'Procfile'
+    start_cmd = ""
 
-begin
-  build_dir = ARGV[0]
-  build_dir += '/' if build_dir[-1] != '/'
-  puts BootScriptFinder.new(build_dir).find_boot_script
-rescue => e
-  puts ""
+    if (File.exist?(procfile_file))
+      procfile_content = ''
+      File.open(procfile_file,'r') do |file|
+        while line = file.gets
+          procfile_content += line
+        end
+      end
+      if (matched = /web:\s+(.+)/.match(procfile_content))
+        start_cmd = matched[1]
+      end
+    end
+
+    return start_cmd
+  end
+
 end

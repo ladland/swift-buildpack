@@ -19,9 +19,9 @@ install_app_management() {
   # Install App Management
   if ! [[ ${BLUEMIX_APP_MGMT_INSTALL,,} == "false" ]]; then
     if ! [[ ${INSTALL_BLUEMIX_APP_MGMT,,} == "false" ]]; then
-      status "Installing App Management"
+      status "Installing App Management start"
       source $BP_DIR/lib/app_management.sh
-      status "Installed App Management???????????"
+      status "Installed App Management end"
       # We may have to tweak the different handlers... see the handlers for node and liberty and compare them
       # we may need a subset of all of these handlers for an MVP...
       # for instance, see the start-debug handler in the libery buildpack (it requires proxy)

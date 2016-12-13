@@ -38,6 +38,7 @@ function installAgent() {
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
 }
 
+# https://docs.cloudfoundry.org/buildpacks/custom.html#release-script
 function updateStartCommands() {
   # Update start command on start script (used by agent/initial startup)
   if test -f ${BUILD_DIR}/Procfile; then
@@ -54,7 +55,7 @@ function updateStartCommands() {
   fi
 
   # Update env vars used for dev mode
-  #echo "export BOOT_SCRIPT=${boot_js_file}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
+  #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
 }
 
 function generateAppMgmtInfo() {
@@ -76,10 +77,12 @@ EOL
 
 function installAppManagement() {
   # Find boot script file
-  boot_js_file=$($BP_DIR/bin/find_boot_script $BUILD_DIR)
+  start_cmd=$($BP_DIR/bin/find_start_cmd $BUILD_DIR)
 
-  if [ "$boot_js_file" == "" ]; then
-    info "WARN: App Management cannot be installed because the start command cannot be found."
+  status "start_cmd: $start_cmd"
+
+  if [ "$start_cmd" == "" ]; then
+    info "WARN: App Management cannot be installed because the start command could not be found."
     info "To install App Management utilities, specify a start command for your Swift application in 'Procfile'."
   else
     # Install development mode utilities
