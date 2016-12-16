@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ##
 # Copyright IBM Corporation 2016
 #
@@ -14,21 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##
-# bin/detect <build-dir>
 
-# Configure directories
-BP_DIR=$(cd $(dirname $0); cd ..; pwd)
-APP_DIR=$1
-
-# Load global vars
-source $compile_buildpack_dir/lib/globals.sh
-# Load convenience functions
-source $compile_buildpack_dir/lib/utils.sh
-
-if [[ -f $APP_DIR/Package.swift ]]; then
-  swift-version=get_swift_version
-  buildpack-version=$(cat $BP_DIR/VERSION)
-  echo "IBM Bluemix buildpack for Swift (Swift: $swift-version, buildpack: $buildpack-version) && exit 0
-else
-  echo "no" && exit 1
-fi
+DEFAULT_SWIFT_VERSION=3.0.2
+CLANG_VERSION=3.8.0

@@ -134,3 +134,14 @@ install_packages() {
     dpkg -x $DEB $BUILD_DIR/.apt/
   done
 }
+
+get_swift_version() {
+# Determine Swift version for the app
+  if [ -f $BUILD_DIR/.swift-version ]; then
+    # Take any pinned Swift version, stripping any redundant `swift-` prefix and/or `RELEASE` suffix if present
+    SWIFT_VERSION=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
+  else
+    SWIFT_VERSION=$DEFAULT_SWIFT_VERSION
+  fi
+  echo SWIFT_VERSION
+}

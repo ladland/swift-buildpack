@@ -29,8 +29,6 @@ fi
 # Global variables
 BUILD_DIR=$1
 CACHE_DIR=$2
-DEFAULT_SWIFT_VERSION=3.0.2
-CLANG_VERSION=3.8.0
 compile_buildpack_dir=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$compile_buildpack_dir/bin
 BUILDPACK_PATH=$compile_buildpack_dir source $compile_buildpack_dir/compile-extensions/lib/common
@@ -40,6 +38,8 @@ PACKAGES_DIR="Packages"
 
 # Check environment support
 $compile_buildpack_dir/compile-extensions/bin/check_stack_support
+# Load global vars
+source $compile_buildpack_dir/lib/globals.sh
 # Load convenience functions like status(), echo(), and indent()
 source $compile_buildpack_dir/lib/utils.sh
 # Load caching functions
