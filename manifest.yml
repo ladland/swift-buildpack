@@ -59,3 +59,5 @@ exclude_files:
   - buildpack-packager/
   - swift_buildpack-*v*.zip
   - cf_build/
+  - .travis.yml
+  - ci/
