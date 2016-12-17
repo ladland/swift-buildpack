@@ -23,10 +23,8 @@ set -e
 BP_DIR=$(cd $(dirname $0); cd ..; pwd)
 APP_DIR=$1
 
-# Load global vars
-source $BP_DIR/lib/globals.sh
 # Load convenience functions
-source $BP_DIR/lib/utils.sh
+source $BP_DIR/lib/common.sh
 
 if [[ -f $APP_DIR/Package.swift ]]; then
   swift_version="$(get_swift_version)"
