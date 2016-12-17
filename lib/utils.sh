@@ -139,9 +139,9 @@ get_swift_version() {
 # Determine Swift version for the app
   if [ -f $BUILD_DIR/.swift-version ]; then
     # Take any pinned Swift version, stripping any redundant `swift-` prefix and/or `RELEASE` suffix if present
-    SWIFT_VERSION=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
+    local swift_version=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
   else
-    SWIFT_VERSION=$DEFAULT_SWIFT_VERSION
+    local swift_version=$DEFAULT_SWIFT_VERSION
   fi
-  echo SWIFT_VERSION
+  echo $swift_version
 }
