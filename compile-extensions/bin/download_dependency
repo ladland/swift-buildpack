@@ -118,6 +118,7 @@ else
   if dependency_md5 == generated_md5
     exit 0
   else
+    STDERR.puts "ERROR: Dependency could not be downloaded from: #{translated_uri}"
     FileUtils.rm(file_location)
     exit 3
   end
