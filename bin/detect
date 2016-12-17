@@ -16,19 +16,22 @@
 ##
 # bin/detect <build-dir>
 
+# Abort if any command fails
+set -e
+
 # Configure directories
 BP_DIR=$(cd $(dirname $0); cd ..; pwd)
 APP_DIR=$1
 
 # Load global vars
-source $compile_buildpack_dir/lib/globals.sh
+source $BP_DIR/lib/globals.sh
 # Load convenience functions
-source $compile_buildpack_dir/lib/utils.sh
+source $BP_DIR/lib/utils.sh
 
 if [[ -f $APP_DIR/Package.swift ]]; then
-  swift-version=get_swift_version
-  buildpack-version=$(cat $BP_DIR/VERSION)
-  echo "IBM Bluemix buildpack for Swift (Swift: $swift-version, buildpack: $buildpack-version) && exit 0
+  swift_version="$(get_swift_version)"
+  buildpack_version="$(cat $BP_DIR/VERSION)"
+  echo "IBM Bluemix buildpack for Swift (Swift: $swift_version, buildpack: $buildpack_version)" && exit 0
 else
   echo "no" && exit 1
 fi
