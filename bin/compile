@@ -29,8 +29,6 @@ fi
 # Global variables
 BUILD_DIR=$1
 CACHE_DIR=$2
-DEFAULT_SWIFT_VERSION=3.0.1
-CLANG_VERSION=3.8.0
 compile_buildpack_dir=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$compile_buildpack_dir/bin
 BUILDPACK_PATH=$compile_buildpack_dir source $compile_buildpack_dir/compile-extensions/lib/common
@@ -41,7 +39,7 @@ PACKAGES_DIR="Packages"
 # Check environment support
 $compile_buildpack_dir/compile-extensions/bin/check_stack_support
 # Load convenience functions like status(), echo(), and indent()
-source $compile_buildpack_dir/lib/utils.sh
+source $compile_buildpack_dir/lib/common.sh
 # Load caching functions
 source ${compile_buildpack_dir}/lib/cache.sh
 
@@ -65,36 +63,7 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p $BUILD_DIR/.apt
 
 # ----------------------------------------------------------------------------- #
-# Download system level dependencies for Kitura                                 #
-# ----------------------------------------------------------------------------- #
-status "Downloading system level dependencies..."
-packages=("libicu-dev" "libcurl4-openssl-dev")
-download_packages "${packages[@]}"
-
-# ----------------------------------------------------------------------------- #
-# Download any application specific system dependencies specified               #
-# in Aptfile (if present) using apt-get                                         #
-# ----------------------------------------------------------------------------- #
-if [ -f $BUILD_DIR/Aptfile ]; then
-  status "Aptfile found."
-  for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
-    status "Entry found in Aptfile for $PACKAGE."
-    packages=($PACKAGE)
-    download_packages "${packages[@]}"
-  done
-else
-  status "No Aptfile found."
-fi
-
-# ----------------------------------------------------------------------------- #
-# Install any downloaded system level packages (DEB files)                      #
-# ----------------------------------------------------------------------------- #
-status "Installing system level dependencies..."
-install_packages
-
-# ----------------------------------------------------------------------------- #
-# After installing system level packages, write profile script and              #
-# set additional environment variables                                          #
+# Write profile script and set additional environment variables                 #
 # ----------------------------------------------------------------------------- #
 status "Writing profile script..."
 mkdir -p $BUILD_DIR/.profile.d
@@ -116,17 +85,41 @@ export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
 export PKG_CONFIG_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
 
+
+# ----------------------------------------------------------------------------- #
+# Copy pre-cached system level dependencies for Kitura                          #
+# ----------------------------------------------------------------------------- #
+status "Copying deb files to installation folder..."
+cp $compile_buildpack_dir/binary-dependencies/*.deb $APT_CACHE_DIR/archives
+
+# ----------------------------------------------------------------------------- #
+# Download system level dependencies for Kitura                                 #
+# ----------------------------------------------------------------------------- #
+# We are using DEB files again (see code block above)
+#status "Downloading system level dependencies..."
+#packages=("libicu-dev" "libcurl4-openssl-dev")
+#download_packages "${packages[@]}"
+
+# ----------------------------------------------------------------------------- #
+# Download any application specific system dependencies specified               #
+# in Aptfile (if present) using apt-get                                         #
+# ----------------------------------------------------------------------------- #
+if [ -f $BUILD_DIR/Aptfile ]; then
+  status "Aptfile found."
+  for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
+    status "Entry found in Aptfile for $PACKAGE."
+    packages=($PACKAGE)
+    download_packages "${packages[@]}"
+  done
+else
+  status "No Aptfile found."
+fi
+
 # ----------------------------------------------------------------------------- #
 # Install Swift dev tools & clang                                               #
 # ----------------------------------------------------------------------------- #
 # Determine Swift version for the app
-if [ -f $BUILD_DIR/.swift-version ]; then
-  # Take any pinned Swift version, stripping any redundant `swift-` prefix and/or `RELEASE` suffix if present
-  SWIFT_VERSION=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
-else
-  SWIFT_VERSION=$DEFAULT_SWIFT_VERSION
-fi
-
+SWIFT_VERSION="$(get_swift_version)"
 SWIFT_NAME_VERSION="swift-${SWIFT_VERSION}"
 CLANG_NAME_VERSION="clang-${CLANG_VERSION}"
 
@@ -145,7 +138,7 @@ CLANG_PATH=$CACHE_DIR/$(echo $CLANG_NAME_VERSION/clang*)
 export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 
 # ----------------------------------------------------------------------------- #
-# Restore Packages folder based on current state                               #
+# Restore Packages folder based on current state                                #
 # ----------------------------------------------------------------------------- #
 restore_cache() {
   local cache_status="$(get_cache_status)"
@@ -159,9 +152,28 @@ restore_cache() {
 restore_cache
 
 # ----------------------------------------------------------------------------- #
-# Build/compile Swift application                                               #
+# Parse Package.swift to determine any required system level dependencies.      #
 # ----------------------------------------------------------------------------- #
 cd $BUILD_DIR
+status "Fetching Swift packages and parsing Package.swift files..."
+swift package fetch | indent
+PACKAGES_TO_INSTALL=($(set +o pipefail;find . -type f -name "Package.swift" | xargs egrep -r "Apt *\(" | sed -e 's/^.*\.Apt *( *" *//' -e 's/".*$//' | sort | uniq; set -o pipefail))
+if [ "${#PACKAGES_TO_INSTALL[@]}" -gt "0" ]; then
+  status "Additional packages to download: ${PACKAGES_TO_INSTALL[@]}"
+  download_packages "${PACKAGES_TO_INSTALL[@]}"
+else
+  status "No additional packages to download."
+fi
+
+# ----------------------------------------------------------------------------- #
+# Install any downloaded system level packages (DEB files)                      #
+# ----------------------------------------------------------------------------- #
+status "Installing system level dependencies..."
+install_packages
+
+# ----------------------------------------------------------------------------- #
+# Build/compile Swift application                                               #
+# ----------------------------------------------------------------------------- #
 status "Building Package..."
 if [ -f $BUILD_DIR/.swift-build-options-linux ]; then
   # Expand variables in loaded string
@@ -171,7 +183,6 @@ else
   SWIFT_BUILD_OPTIONS=""
 fi
 
-#swift package fetch
 swift build --configuration release $SWIFT_BUILD_OPTIONS -Xcc -I$BUILD_DIR/.apt/usr/include -Xlinker -L$BUILD_DIR/.apt/usr/lib -Xlinker -L$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu -Xlinker -rpath=$BUILD_DIR/.apt/usr/lib | indent
 
 # These should be statically linked, seems a Swift bug.
@@ -210,13 +221,14 @@ cache_build
 # the 'Uploading droplet' step. Caching tar files and/or large                  #
 # directories results in a negative performance hit.                            #
 # ----------------------------------------------------------------------------- #
-status "Optimizing contents of cache folder"
+status "Optimizing contents of cache folder..."
 rm -rf $CACHE_DIR/$SWIFT_NAME_VERSION
 rm -rf $CACHE_DIR/$CLANG_NAME_VERSION
 rm -rf $CACHE_DIR/"$SWIFT_NAME_VERSION.tar.gz"
 rm -rf $CACHE_DIR/"$CLANG_NAME_VERSION.tar.xz"
-#status "Cache folder contents: `ls $CACHE_DIR`"
-#status "Cache folder size is: `du -sk $CACHE_DIR`"
+for DEB in $(ls -1 $compile_buildpack_dir/binary-dependencies/*.deb); do
+  rm $APT_CACHE_DIR/archives/$(basename $DEB)
+done
 
 # ----------------------------------------------------------------------------- #
 # Set up application environment                                                #

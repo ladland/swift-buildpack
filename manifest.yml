@@ -26,9 +26,9 @@ url_to_dependency_map:
 
 dependencies:
   - name: swift
-    version: 3.0
-    uri: https://swift.org/builds/swift-3.0-release/ubuntu1404/swift-3.0-RELEASE/swift-3.0-RELEASE-ubuntu14.04.tar.gz
-    md5: 88edb298674199f015235aa4eaa058fe
+    version: 3.0.2
+    uri: https://swift.org/builds/swift-3.0.2-release/ubuntu1404/swift-3.0.2-RELEASE/swift-3.0.2-RELEASE-ubuntu14.04.tar.gz
+    md5: 7979301bf1163b07524d5f9144d3ce53
     cf_stacks:
       - cflinuxfs2
   - name: swift
@@ -39,7 +39,7 @@ dependencies:
       - cflinuxfs2
   - name: clang
     version: 3.8.0
-    uri: http://llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+    uri: http://releases.llvm.org/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz
     md5: 890274421f4480ce228ed3eab1fd3c73
     cf_stacks:
       - cflinuxfs2
@@ -59,3 +59,5 @@ exclude_files:
   - buildpack-packager/
   - swift_buildpack-*v*.zip
   - cf_build/
+  - .travis.yml
+  - ci/

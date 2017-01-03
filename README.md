@@ -179,7 +179,7 @@ The buildpack will detect your app as Swift if it has a `Package.swift` file in 
 
 ### Version installed on Bluemix
 
-The latest version of the IBM Bluemix buildpack for Swift on Bluemix is [v2.0.1](https://github.com/IBM-Swift/swift-buildpack/releases/tag/2.0.1).
+The latest version of the IBM Bluemix buildpack for Swift on Bluemix is [v2.0.2](https://github.com/IBM-Swift/swift-buildpack/releases/tag/2.0.2).
 
 Please note that it is possible that the latest buildpack code contained in this repo hasn't yet been installed on Bluemix. If that happens to be the case and you'd like to leverage the latest buildpack code, you can do so by adding the `-b https://github.com/IBM-Swift/swift-buildpack` parameter to the `cf push` command, as shown below:
 
@@ -221,7 +221,7 @@ command: <executable_name>
 
 ### What is the latest version of Swift supported?
 
-The latest version of Swift supported by this buildpack is ```3.0.1```.
+The latest version of Swift supported by this buildpack is ```3.0.2```.
 
 ### Specify a Swift version
 
@@ -229,13 +229,13 @@ You specify the version of Swift for your application using a `.swift-version` f
 
 ```shell
 $ cat .swift-version
-3.0.1
+3.0.2
 ```
 
 Please note that the swift_buildpack installed on Bluemix **caches** the following versions of the Swift binaries:
 
+- `3.0.2`
 - `3.0.1`
-- `3.0`
 
 If you'd like to use a different version of Swift [that is not cached] on Bluemix, you can specify it in the `.swift-version` file.  Please be aware that using a Swift version that is not cached increases the provisioning time of your app on Bluemix.
 
@@ -320,15 +320,15 @@ Admin tasks
 To install this buildpack:
 
 ```shell
-wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.1/buildpack_swift_v2.0.1-20160915-1220.zip
-cf create-buildpack swift_buildpack buildpack_swift_v2.0.1-20160915-1220.zip <position>
+wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.2/buildpack_swift_v2.0.2-20160915-1220.zip
+cf create-buildpack swift_buildpack buildpack_swift_v2.0.2-20160915-1220.zip <position>
 ```
 
 And to update it:
 
 ```shell
-wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.1/buildpack_swift_v2.0.1-20160915-1220.zip
-cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.1-20160915-1220.zip
+wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.2/buildpack_swift_v2.0.2-20160915-1220.zip
+cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.2-20160915-1220.zip
 ```
 
 For more details on installing buildpacks, see [Adding buildpacks to Cloud Foundry](https://docs.cloudfoundry.org/adminguide/buildpacks.html).
