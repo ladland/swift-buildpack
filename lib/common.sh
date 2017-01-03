@@ -14,6 +14,10 @@
 # limitations under the License.
 ##
 
+# Global/common vars
+DEFAULT_SWIFT_VERSION=3.0.2
+CLANG_VERSION=3.8.0
+
 error() {
   echo " !     $*" >&2
   exit 1
@@ -133,4 +137,15 @@ install_packages() {
     status "Installing $(basename $DEB)"
     dpkg -x $DEB $BUILD_DIR/.apt/
   done
+}
+
+get_swift_version() {
+# Determine Swift version for the app
+  if [ -f $BUILD_DIR/.swift-version ]; then
+    # Take any pinned Swift version, stripping any redundant `swift-` prefix and/or `RELEASE` suffix if present
+    local swift_version=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
+  else
+    local swift_version=$DEFAULT_SWIFT_VERSION
+  fi
+  echo $swift_version
 }

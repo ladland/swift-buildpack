@@ -104,7 +104,13 @@ if File.exist? cache_path
   end
 end
 
-`curl -s #{translated_uri} -o #{file_location}`
+if ENV['BP_DEBUG']
+  curl_verbose = "-v"
+else
+  curl_verbose = ""
+end
+
+`curl #{curl_verbose} -s -L #{translated_uri} -o #{file_location}`
 generated_md5 = Digest::MD5.file(file_location).hexdigest
 
 debug "DEBUG: generated_md5 '#{generated_md5}'"
@@ -118,6 +124,7 @@ else
   if dependency_md5 == generated_md5
     exit 0
   else
+    STDERR.puts "ERROR: Dependency could not be downloaded from: #{translated_uri}"
     FileUtils.rm(file_location)
     exit 3
   end

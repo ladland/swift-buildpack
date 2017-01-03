@@ -12,6 +12,7 @@ branches:
 
 before_install:
   # Install Cloud Foundry command line
+  - set -e
   - wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
   - echo "deb http://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
   - sudo apt-get update
@@ -24,6 +25,7 @@ before_install:
   - git clone -b bluemix-estado https://github.com/IBM-Bluemix/swift-helloworld.git
 
 script:
+  - set -e
   - ./ci/performance_validator.sh Kitura-Starter $KITURA_STARTER_PUSH_TIME $TIMES_TO_REPEAT_TO_SUCCESS $KITURA_STARTER_REPUSH_TIME
   - rm -rf Kitura-Starter
   - ./ci/performance_validator.sh swift-helloworld $SWIFT_HELLOWORLD_PUSH_TIME $TIMES_TO_REPEAT_TO_SUCCESS $SWIFT_HELLOWORLD_REPUSH_TIME

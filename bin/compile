@@ -29,8 +29,6 @@ fi
 # Global variables
 BUILD_DIR=$1
 CACHE_DIR=$2
-DEFAULT_SWIFT_VERSION=3.0.1
-CLANG_VERSION=3.8.0
 compile_buildpack_dir=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$compile_buildpack_dir/bin
 BUILDPACK_PATH=$compile_buildpack_dir source $compile_buildpack_dir/compile-extensions/lib/common
@@ -41,7 +39,7 @@ PACKAGES_DIR="Packages"
 # Check environment support
 $compile_buildpack_dir/compile-extensions/bin/check_stack_support
 # Load convenience functions like status(), echo(), and indent()
-source $compile_buildpack_dir/lib/utils.sh
+source $compile_buildpack_dir/lib/common.sh
 # Load caching functions
 source ${compile_buildpack_dir}/lib/cache.sh
 
@@ -121,13 +119,7 @@ fi
 # Install Swift dev tools & clang                                               #
 # ----------------------------------------------------------------------------- #
 # Determine Swift version for the app
-if [ -f $BUILD_DIR/.swift-version ]; then
-  # Take any pinned Swift version, stripping any redundant `swift-` prefix and/or `RELEASE` suffix if present
-  SWIFT_VERSION=$(cat $BUILD_DIR/.swift-version | sed $'s/\r$//' | sed -e "s/swift-//" | sed -e "s/-RELEASE//")
-else
-  SWIFT_VERSION=$DEFAULT_SWIFT_VERSION
-fi
-
+SWIFT_VERSION="$(get_swift_version)"
 SWIFT_NAME_VERSION="swift-${SWIFT_VERSION}"
 CLANG_NAME_VERSION="clang-${CLANG_VERSION}"
 
@@ -164,7 +156,7 @@ restore_cache
 # ----------------------------------------------------------------------------- #
 cd $BUILD_DIR
 status "Fetching Swift packages and parsing Package.swift files..."
-swift package fetch
+swift package fetch | indent
 PACKAGES_TO_INSTALL=($(set +o pipefail;find . -type f -name "Package.swift" | xargs egrep -r "Apt *\(" | sed -e 's/^.*\.Apt *( *" *//' -e 's/".*$//' | sort | uniq; set -o pipefail))
 if [ "${#PACKAGES_TO_INSTALL[@]}" -gt "0" ]; then
   status "Additional packages to download: ${PACKAGES_TO_INSTALL[@]}"
