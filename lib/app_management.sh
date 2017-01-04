@@ -16,6 +16,7 @@
 ##
 
 function installAgent() {
+  status "installAgent start"
   mkdir $BUILD_DIR/.app-management
   mkdir $BUILD_DIR/.app-management/utils
   mkdir $BUILD_DIR/.app-management/handlers
@@ -36,10 +37,12 @@ function installAgent() {
   chmod +x $BUILD_DIR/.app-management/scripts/*
   chmod -R +x $BUILD_DIR/.app-management/handlers/
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
+  status "installAgent end"
 }
 
 # https://docs.cloudfoundry.org/buildpacks/custom.html#release-script
 function updateStartCommands() {
+  status "updateStartCommands start"
   # Update start command on start script (used by agent/initial startup)
   if test -f ${BUILD_DIR}/Procfile; then
     local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
@@ -59,9 +62,11 @@ function updateStartCommands() {
   status "COMMAND1: $COMMAND"
   # Update env vars used for dev mode
   #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
+  status "updateStartCommands end"
 }
 
 function generateAppMgmtInfo() {
+  status "generateAppMgmtInfo start"
   local CONTAINER="warden"
   local SSH_ENABLED="false"
   local PROXY_SUPPORTED='["v1", "v2"]'
@@ -75,10 +80,11 @@ cat > $BUILD_DIR/.app-management/app_mgmt_info.json << EOL
   "proxy_supported_version": $PROXY_SUPPORTED
 }
 EOL
-
+status "generateAppMgmtInfo end"
 }
 
 function installAppManagement() {
+  status "installAppManagement start"
   # Find boot script file
   start_cmd=$($BP_DIR/bin/find_start_cmd $BUILD_DIR)
 
@@ -92,6 +98,8 @@ function installAppManagement() {
     installAgent && updateStartCommands && generateAppMgmtInfo
     status "installAppManagement end"
   fi
+
+  status "installAppManagement end"
 }
 
 installAppManagement
