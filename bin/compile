@@ -42,6 +42,8 @@ $compile_buildpack_dir/compile-extensions/bin/check_stack_support
 source $compile_buildpack_dir/lib/common.sh
 # Load caching functions
 source ${compile_buildpack_dir}/lib/cache.sh
+# Load bluemix extension utils
+source ${compile_buildpack_dir}/lib/bluemix_ext.sh
 
 # Log default Swift version
 status "Default supported Swift version is $DEFAULT_SWIFT_VERSION"
