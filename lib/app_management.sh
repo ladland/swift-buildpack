@@ -60,7 +60,9 @@ function updateStartCommands() {
   fi
 
   cat ${BUILD_DIR}/Procfile
-  
+  cat ${BUILD_DIR}/Procfile
+  cat ${BUILD_DIR}/Procfile
+
   # Update env vars used for dev mode
   #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
   status "updateStartCommands end"
