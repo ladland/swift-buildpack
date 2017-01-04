@@ -96,8 +96,8 @@ function installAppManagement() {
   status "start_cmd: $start_cmd"
 
   if [ "$start_cmd" == "" ]; then
-    info "WARN: App Management cannot be installed because the start command could not be found."
-    info "To install App Management utilities, specify a start command for your Swift application in 'Procfile'."
+    status "WARN: App Management cannot be installed because the start command could not be found."
+    status "WARN: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
     installAgent && updateStartCommands && generateAppMgmtInfo
