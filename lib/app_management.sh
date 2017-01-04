@@ -86,7 +86,7 @@ status "generateAppMgmtInfo end"
 function installAppManagement() {
   status "installAppManagement start"
   # Find boot script file
-  start_cmd=$($BP_DIR/bin/find_start_cmd $BUILD_DIR)
+  start_cmd=$($BP_DIR/lib/find_start_cmd $BUILD_DIR)
 
   status "start_cmd: $start_cmd"
 
