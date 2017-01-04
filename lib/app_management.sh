@@ -22,14 +22,6 @@ function installAgent() {
   mkdir $BUILD_DIR/.app-management/handlers
   mkdir $BUILD_DIR/.app-management/scripts
 
-  ls -la $BUILD_DIR/.app-management/scripts
-  ls -la $BUILD_DIR/.app-management/utils
-  ls -la $BUILD_DIR/.app-management/handlers
-
-  ls -la $BP_DIR/app_management/scripts/*
-  ls -la $BP_DIR/app_management/utils/*
-  ls -la $BP_DIR/app_management/handlers/*
-
   cp $BP_DIR/app_management/scripts/* $BUILD_DIR/.app-management/scripts
   cp $BP_DIR/app_management/utils/* $BUILD_DIR/.app-management/utils
   cp -ra $BP_DIR/app_management/handlers/* $BUILD_DIR/.app-management/handlers
@@ -53,21 +45,22 @@ function updateStartCommands() {
   status "updateStartCommands start"
   # Update start command on start script (used by agent/initial startup)
   if test -f ${BUILD_DIR}/Procfile; then
+    status "updateStartCommands fi 1"
     local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
     sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
 
     # Use initial_startup to start application
     sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
   else
+    status "updateStartCommands fi 2"
     sed -i s#%COMMAND%#"npm start"# "${BUILD_DIR}"/.app-management/scripts/start
     # Use initial_startup to start application
     touch $BUILD_DIR/Procfile
     echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
   fi
 
-  status "COMMAND1: %COMMAND%"
-  status "COMMAND1: $%COMMAND%"
-  status "COMMAND1: $COMMAND"
+  cat ${BUILD_DIR}/Procfile
+  
   # Update env vars used for dev mode
   #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
   status "updateStartCommands end"
