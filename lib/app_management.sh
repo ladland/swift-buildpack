@@ -26,6 +26,10 @@ function installAgent() {
   ls -la $BUILD_DIR/.app-management/utils
   ls -la $BUILD_DIR/.app-management/handlers
 
+  ls -la $BP_DIR/app_management/scripts/*
+  ls -la $BP_DIR/app_management/utils/*
+  ls -la $BP_DIR/app_management/handlers/*
+
   cp $BP_DIR/app_management/scripts/* $BUILD_DIR/.app-management/scripts
   cp $BP_DIR/app_management/utils/* $BUILD_DIR/.app-management/utils
   cp -ra $BP_DIR/app_management/handlers/* $BUILD_DIR/.app-management/handlers
