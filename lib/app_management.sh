@@ -44,8 +44,7 @@ function installAgent() {
 function updateStartCommands() {
   status "updateStartCommands start"
   # Update start command on start script (used by agent/initial startup)
-
-  #sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
+  sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
   # Use initial_startup to start application
   sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
 
