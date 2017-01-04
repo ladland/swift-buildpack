@@ -44,24 +44,28 @@ function installAgent() {
 function updateStartCommands() {
   status "updateStartCommands start"
   # Update start command on start script (used by agent/initial startup)
-  if test -f ${BUILD_DIR}/Procfile; then
-    status "updateStartCommands fi 1"
-    local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
-    sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
+
+  #sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
+  # Use initial_startup to start application
+  sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
+
+
+  #if test -f ${BUILD_DIR}/Procfile; then
+  #  status "updateStartCommands fi 1"
+  #  local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
+  #   sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
 
     # Use initial_startup to start application
-    sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
-  else
-    status "updateStartCommands fi 2"
-    sed -i s#%COMMAND%#"npm start"# "${BUILD_DIR}"/.app-management/scripts/start
+  #  sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
+  #else
+  #  status "updateStartCommands fi 2"
+  #  sed -i s#%COMMAND%#"npm start"# "${BUILD_DIR}"/.app-management/scripts/start
     # Use initial_startup to start application
-    touch $BUILD_DIR/Procfile
-    echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
-  fi
+  #  touch $BUILD_DIR/Procfile
+  #  echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
+  #fi
 
   status "HERE 1"
-  cat ${BUILD_DIR}/Procfile
-  cat ${BUILD_DIR}/Procfile
   cat ${BUILD_DIR}/Procfile
   status "HERE 2"
 
