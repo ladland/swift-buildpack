@@ -31,7 +31,6 @@ def get_handler_list
 
   if !ENV['BLUEMIX_APP_MGMT_ENABLE'].nil?
     ENV['BLUEMIX_APP_MGMT_ENABLE'].downcase.split('+').map(&:strip)
-    STDERR.puts "get_handler_list 2"
   end
 
   STDERR.puts "get_handler_list 3"
@@ -82,6 +81,8 @@ end
 STDERR.puts "BEGIN 1"
 
 handler_list = get_handler_list
+
+STDERR.puts "handler_list: #{handler_list}"
 
 if handler_list.nil? || handler_list.empty?
   # No handlers are specified. Start the runtime normally.
