@@ -26,10 +26,10 @@ $LOAD_PATH.unshift File.expand_path(APP_MGMT_DIR, __FILE__)
 
 # These require stamements must be executed after the LOAD_PATH array is updated.
 require 'utils/droplet_utils.rb'
-#require 'utils/handler_utils.rb'
+require 'utils/handler_utils.rb'
 require 'utils/simple_logger.rb'
 
-#config = Utils::HandlerUtils.get_configuration('debug')
+config = Utils::HandlerUtils.get_configuration('debug')
 port = config['port'] || DropletUtils.find_port(7777, 8777)
 #STDERR.puts "port #{port}"
 
