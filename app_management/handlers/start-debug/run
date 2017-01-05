@@ -17,9 +17,9 @@
 ##
 
 require 'fileutils'
-require 'utils/droplet_utils'
+require 'utils/droplet_utils.rb'
 require 'utils/handler_utils.rb'
-require 'utils/simple_logger'
+#require 'utils/simple_logger'
 
 # directories
 INSTALL_DIR = File.expand_path('../../..', File.dirname(__FILE__)).freeze
@@ -39,4 +39,4 @@ pgid = Process.getpgid(pid)
 STDOUT.puts "lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}."
 
 STDERR.puts "finished?"
-Utils::SimpleLogger.info("HOLA!!!")
+#Utils::SimpleLogger.info("HOLA!!!")
