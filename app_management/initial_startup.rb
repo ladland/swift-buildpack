@@ -27,9 +27,14 @@ require 'utils/handlers'
 require 'utils/simple_logger'
 
 def get_handler_list
+  STDERR.puts "get_handler_list 1"
+
   if !ENV['BLUEMIX_APP_MGMT_ENABLE'].nil?
     ENV['BLUEMIX_APP_MGMT_ENABLE'].downcase.split('+').map(&:strip)
+    STDERR.puts "get_handler_list 2"
   end
+
+  STDERR.puts "get_handler_list 3"
 end
 
 def start_runtime(app_dir)
