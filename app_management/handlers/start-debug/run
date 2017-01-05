@@ -24,6 +24,7 @@ APP_MGMT_DIR = File.join(INSTALL_DIR, '.app-management').freeze
 
 $LOAD_PATH.unshift File.expand_path(APP_MGMT_DIR, __FILE__)
 
+# These require stamements must be executed after the LOAD_PATH array is updated.
 require 'utils/droplet_utils.rb'
 require 'utils/handler_utils.rb'
 require 'utils/simple_logger.rb'
@@ -40,4 +41,4 @@ pgid = Process.getpgid(pid)
 STDOUT.puts "lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}."
 
 STDERR.puts "finished?"
-#Utils::SimpleLogger.info("HOLA!!!")
+Utils::SimpleLogger.info("HOLA!!!")
