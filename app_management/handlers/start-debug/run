@@ -32,7 +32,7 @@ require 'utils/simple_logger.rb'
 config = Utils::HandlerUtils.get_configuration('debug')
 port = config['port'] || DropletUtils.find_port(7777, 8777)
 
-pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
+pid = spawn("lldb-serverrrrrr platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
 Process.detach(pid)
 pgid = Process.getpgid(pid)
 
@@ -45,6 +45,11 @@ Utils::SimpleLogger.info("HOLA!!!")
 Utils::SimpleLogger.info("HOLA!!!")
 Utils::SimpleLogger.info("HOLA!!!")
 
-`ps -ef | grep #{pid}`
-`cat #{APP_MGMT_DIR}/lldb-server.out`
-`cat #{APP_MGMT_DIR}/lldb-server.err`
+system("ps", "-ef", out: $stdout, err: :out)
+system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
+system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)
+
+
+#{}`ps -ef | grep #{pid}`
+#{}`cat #{APP_MGMT_DIR}/lldb-server.out`
+#{}`cat #{APP_MGMT_DIR}/lldb-server.err`
