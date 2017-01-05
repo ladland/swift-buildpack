@@ -50,10 +50,10 @@ debug "DEBUG: dependency_md5 '#{dependency_md5}'"
 
 if translated_uri.nil?
   # Assumption is that the requested dependency is a Swift development or release snapshot
-  STDERR.puts "WARNING: You are requesting a custom version of Swift (defined in your .swift-version)"
-  STDERR.puts "WARNING: Default supported Swift version: #{default_swift_version}"
-  STDERR.puts "WARNING: Requested Swift version for your app: #{requested_swift_version}"
-  STDERR.puts "WARNING: The buildpack will attempt to download requested version from Swift.org"
+  STDERR.puts "-----> WARNING: You are requesting a custom version of Swift (defined in your .swift-version)"
+  STDERR.puts "-----> WARNING: Default supported Swift version: #{default_swift_version}"
+  STDERR.puts "-----> WARNING: Requested Swift version for your app: #{requested_swift_version}"
+  STDERR.puts "-----> WARNING: The buildpack will attempt to download requested version from Swift.org"
 
   # Determine snapshot type, swift version, url...
   if requested_swift_version.downcase.include? "development"
@@ -81,13 +81,13 @@ if translated_uri.nil?
   if status_code == "200"
     debug "DEBUG: Dependency is reachable on remote server: #{original_url}"
   else
-    STDERR.puts "ERROR: Could not find/download requested custom Swift version from Swift.org: #{translated_uri}"
+    STDERR.puts "-----> ERROR: Could not find/download requested custom Swift version from Swift.org: #{translated_uri}"
     exit 3
   end
 else
   if !(default_swift_version.nil? || default_swift_version.empty?) && !(default_swift_version.eql? requested_swift_version)
-    STDERR.puts "WARNING: Default supported Swift version: #{default_swift_version}"
-    STDERR.puts "WARNING: Requested Swift version for your app: #{requested_swift_version}"
+    STDERR.puts "-----> WARNING: Default supported Swift version: #{default_swift_version}"
+    STDERR.puts "-----> WARNING: Requested Swift version for your app: #{requested_swift_version}"
   end
 end
 
@@ -124,7 +124,7 @@ else
   if dependency_md5 == generated_md5
     exit 0
   else
-    STDERR.puts "ERROR: Dependency could not be downloaded from: #{translated_uri}"
+    STDERR.puts "-----> ERROR: Dependency could not be downloaded from: #{translated_uri}"
     FileUtils.rm(file_location)
     exit 3
   end

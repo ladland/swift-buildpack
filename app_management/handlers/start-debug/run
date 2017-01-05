@@ -24,8 +24,10 @@ APP_MGMT_DIR = File.join(INSTALL_DIR, '.app-management').freeze
 
 $LOAD_PATH.unshift File.expand_path(APP_MGMT_DIR, __FILE__)
 
-require 'utils/droplet_utils'
+#require 'utils/droplet_utils'
 require 'utils/handler_utils.rb'
+
+#lldb-server platform --listen *:8000
 
 def proxy_entry_value(type, backend_port, host, uri_prefix)
   # Update the proxy config file with a tunnel

@@ -74,10 +74,13 @@ def write_json(file, key, value)
   end
 end
 
+STDERR.puts "BEGIN 1"
+
 handler_list = get_handler_list
 
 if handler_list.nil? || handler_list.empty?
   # No handlers are specified. Start the runtime normally.
+  STDERR.puts "BEGIN 2"
   start_runtime(app_dir)
 else
   handlers_dir = File.join(app_mgmt_dir, 'handlers')
@@ -95,6 +98,7 @@ else
     index = JSON.parse(ENV['VCAP_APPLICATION'])['instance_index']
     if index != 0
       # Start the runtime normally. Only allow dev mode on index 0
+      STDERR.puts "BEGIN 3"
       start_runtime(app_dir)
     else
       # Run handlers
@@ -109,6 +113,7 @@ else
     run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
 
     # Start runtime
+    STDERR.puts "BEGIN 4"
     start_runtime(app_dir)
   end
 end
