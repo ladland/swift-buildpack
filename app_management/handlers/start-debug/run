@@ -17,7 +17,7 @@
 ##
 
 require 'fileutils'
-require 'utils/droplet_utils.rb'
+require 'utils/droplet_utils'
 require 'utils/handler_utils.rb'
 require 'utils/simple_logger'
 
