@@ -36,10 +36,7 @@ pid = spawn("lldb-serverrrrrr platform --listen *:#{port}", :out => "#{APP_MGMT_
 Process.detach(pid)
 pgid = Process.getpgid(pid)
 
-STDOUT.puts "lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}."
-STDOUT.puts "finished?"
-STDOUT.puts "finished?"
-STDOUT.puts "finished?"
+Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
 STDOUT.puts "finished?"
 Utils::SimpleLogger.info("HOLA!!!")
 Utils::SimpleLogger.info("HOLA!!!")
