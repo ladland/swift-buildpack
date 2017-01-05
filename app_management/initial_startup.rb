@@ -44,11 +44,11 @@ def start_proxy(app_dir)
   #exec('.app-management/bin/proxyAgent', chdir: app_dir)
 end
 
-def run(app_dir, env, handlers, background)
+def run(app_dir, handlers, background)
   if handlers.length != 0
     command = handlers.map(&:start_script).join(' ; ')
     command = "( #{command} ) &" if background
-    system(env, command.to_s, chdir: app_dir)
+    system(command.to_s, chdir: app_dir)
   end
 end
 
@@ -57,16 +57,16 @@ def run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
   Utils::SimpleLogger.info("Activating app management utilities: #{valid_handlers.join(', ')}")
 
   # get environment for handlers
-  env = get_environment(app_dir)
+  #env = get_environment(app_dir)
 
   # sort handlers for sync and async execution
   sync_handlers, async_handlers = handlers.executions(valid_handlers)
 
   # execute sync handlers
-  run(app_dir, env, sync_handlers, false)
+  run(app_dir, sync_handlers, false)
 
   # execute async handlers
-  run(app_dir, env, async_handlers, true)
+  run(app_dir, async_handlers, true)
 end
 
 def write_json(file, key, value)
