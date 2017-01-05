@@ -31,15 +31,20 @@ require 'utils/simple_logger.rb'
 
 config = Utils::HandlerUtils.get_configuration('debug')
 port = config['port'] || DropletUtils.find_port(7777, 8777)
-#STDERR.puts "port #{port}"
 
 pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
 Process.detach(pid)
-#STDERR.puts "pid #{pid}"
 pgid = Process.getpgid(pid)
+
 STDOUT.puts "lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}."
 STDOUT.puts "finished?"
 STDOUT.puts "finished?"
 STDOUT.puts "finished?"
 STDOUT.puts "finished?"
-#Utils::SimpleLogger.info("HOLA!!!")
+Utils::SimpleLogger.info("HOLA!!!")
+Utils::SimpleLogger.info("HOLA!!!")
+Utils::SimpleLogger.info("HOLA!!!")
+
+`ps -ef | grep #{pid}`
+`cat #{APP_MGMT_DIR}/lldb-server.out`
+`cat #{APP_MGMT_DIR}/lldb-server.err`
