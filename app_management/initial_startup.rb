@@ -88,6 +88,7 @@ if handler_list.nil? || handler_list.empty?
   STDERR.puts "BEGIN 2"
   start_runtime(app_dir)
 else
+  STDERR.puts "BEGIN 5"
   handlers_dir = File.join(app_mgmt_dir, 'handlers')
 
   handlers = Utils::Handlers.new(handlers_dir)
@@ -115,6 +116,7 @@ else
     end
   else
     # Run handlers
+    STDERR.puts "BEGIN 6"
     run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
 
     # Start runtime
