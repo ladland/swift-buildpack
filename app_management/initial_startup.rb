@@ -33,7 +33,7 @@ def get_handler_list
     ENV['BLUEMIX_APP_MGMT_ENABLE'].downcase.split('+').map(&:strip)
   end
 
-  STDERR.puts "get_handler_list 3"
+  #STDERR.puts "get_handler_list 3"
 end
 
 def start_runtime(app_dir)
