@@ -93,11 +93,16 @@ status "generateAppMgmtInfo end"
 }
 
 function copyLLDBServer() {
-  # Copy lldb-server executable
+  # Copy lldb-server executable to .swift-bin
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
-  status "OK.... just copied lldbserver..."
+  status "SEE BELOW!!!!!!"
   ls -la $BUILD_DIR/.swift-bin
-  status "SEE ABOVE!!!"
+  status "SEE ABOVE!!!!!!"
+}
+
+function downloadPython() {
+  status "Downloading Python..."
+  download_packages "libpython2.7"
 }
 
 function installAppManagement() {
@@ -112,7 +117,7 @@ function installAppManagement() {
     status "WARNING: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
-    installAgent && updateStartCommands && generateAppMgmtInfo && copyLLDBServer
+    installAgent && updateStartCommands && generateAppMgmtInfo && copyLLDBServer && downloadPython
     status "installAppManagement end"
   fi
 

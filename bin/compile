@@ -168,6 +168,11 @@ else
 fi
 
 # ----------------------------------------------------------------------------- #
+# Install app management - see lib/bluemix_ext.sh                               #
+# ----------------------------------------------------------------------------- #
+install_app_management
+
+# ----------------------------------------------------------------------------- #
 # Install any downloaded system level packages (DEB files)                      #
 # ----------------------------------------------------------------------------- #
 status "Installing system level dependencies..."
@@ -217,11 +222,6 @@ cache_build() {
   save_signatures
 }
 cache_build
-
-# ----------------------------------------------------------------------------- #
-# Install app management - see lib/bluemix_ext.sh                               #
-# ----------------------------------------------------------------------------- #
-install_app_management
 
 # ----------------------------------------------------------------------------- #
 # Removing binaries and tar files from the CACHE_DIR to speed up                #
