@@ -101,7 +101,7 @@ function copyLLDBServer() {
 }
 
 function downloadPython() {
-  status "Downloading Python..."
+  status "Getting Python"
   download_packages "libpython2.7"
 }
 

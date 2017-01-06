@@ -18,10 +18,10 @@
 install_app_management() {
   # Install App Management only if user asked for it
   if [ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]; then
-    status "Installing App Management."
+    status "Installing App Management"
     source $BP_DIR/lib/app_management.sh
-    status "Finished installing App Management."
+    status "Finished installing App Management"
   else
-    status "Skipping installation of App Management."
+    status "Skipping installation of App Management"
   fi
 }
