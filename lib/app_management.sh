@@ -98,7 +98,7 @@ function copyLLDBServer() {
 
 function downloadPython() {
   status "Getting Python"
-  download_packages "libpython2.7"
+  download_packages ("libpython2.7")
 }
 
 function removePythonDEBs() {
