@@ -36,6 +36,8 @@ PACKAGES_DIR="Packages"
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
+install_python
+
 # Check environment support
 $BP_DIR/compile-extensions/bin/check_stack_support
 # Load convenience functions like status(), echo(), and indent()
