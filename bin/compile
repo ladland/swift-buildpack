@@ -31,13 +31,12 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 BP_DIR=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$BP_DIR/bin
-BUILDPACK_PATH=$BP_DIR source $BP_DIR/compile-extensions/lib/common
+BUILDPACK_PATH=$BP_DIR
 PACKAGES_DIR="Packages"
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
-install_python
-
+source $BP_DIR/compile-extensions/lib/common
 # Check environment support
 $BP_DIR/compile-extensions/bin/check_stack_support
 # Load convenience functions like status(), echo(), and indent()
@@ -88,7 +87,6 @@ export INCLUDE_PATH="$BUILD_DIR/.apt/usr/include:$INCLUDE_PATH"
 export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
 export PKG_CONFIG_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
-
 
 # ----------------------------------------------------------------------------- #
 # Copy pre-cached system level dependencies for Kitura                          #
@@ -253,4 +251,3 @@ set-env PATH '$HOME/.swift-bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LIBRARY_PATH'
 
 echo "PATH IS: $PATH"
-#which swift
