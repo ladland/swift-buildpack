@@ -53,8 +53,8 @@ def run(app_dir, handlers, background)
 end
 
 def run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
-  Utils::SimpleLogger.warning("Ignoring unrecognized app management utilities: #{invalid_handlers.join(', ')}") unless invalid_handlers.empty?
-  Utils::SimpleLogger.info("Activating app management utilities: #{valid_handlers.join(', ')}")
+  Utils::SimpleLogger.warning("Ignoring unrecognized App Management utilities: #{invalid_handlers.join(', ')}") unless invalid_handlers.empty?
+  Utils::SimpleLogger.info("Activating App Management utilities: #{valid_handlers.join(', ')}")
 
   # sort handlers for sync and async execution
   sync_handlers, async_handlers = handlers.executions(valid_handlers)
@@ -75,7 +75,7 @@ def write_json(file, key, value)
 end
 
 handler_list = get_handler_list
-Utils::SimpleLogger.info("-----> App Management handlers: #{handler_list}")
+Utils::SimpleLogger.info("App Management handlers: #{handler_list}")
 
 if handler_list.nil? || handler_list.empty?
   # No handlers are specified. Start the runtime normally.

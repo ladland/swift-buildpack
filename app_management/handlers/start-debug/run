@@ -37,7 +37,7 @@ pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/
 Process.detach(pid)
 pid = `pidof lldb-server`.strip.to_i
 pgid = Process.getpgid(pid)
-Utils::SimpleLogger.info("-----> lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
+Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
 
 #system("ps", "-ef", out: $stdout, err: :out)
 #system("ls -la /home/vcap/app/.swift-bin", out: $stdout, err: :out)

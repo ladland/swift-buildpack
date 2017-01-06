@@ -21,15 +21,15 @@ module Utils
     class << self
 
       def warning(msg)
-        $stderr.puts "Warning: #{msg}"
+        $stderr.puts "-----> Warning: #{msg}"
       end
 
       def error(msg)
-        $stderr.puts "Error: #{msg}"
+        $stderr.puts "-----> Error: #{msg}"
       end
 
       def info(msg)
-        $stdout.puts msg.to_s
+        $stdout.puts "-----> #{msg.to_s}"
       end
 
     end
