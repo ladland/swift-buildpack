@@ -25,11 +25,7 @@ function installAgent() {
   cp $BP_DIR/app_management/scripts/* $BUILD_DIR/.app-management/scripts
   cp $BP_DIR/app_management/utils/* $BUILD_DIR/.app-management/utils
   cp -ra $BP_DIR/app_management/handlers/* $BUILD_DIR/.app-management/handlers
-  # vendor folder seems to be a node.js thing... that is even deprecated not for node.js...
-  # see following link: http://stackoverflow.com/questions/5178334/folder-structure-for-a-node-js-project
-  # also, the liberty buildpack has its own initial_startup.rb file tool
-  # see ./resources/liberty/initial_startup.rb
-  # the initial_startup.rb file seems to be used only for updating the start command??
+
   cp $BP_DIR/app_management/initial_startup.rb $BUILD_DIR/.app-management
   cp $BP_DIR/app_management/env.json $BUILD_DIR/.app-management
 
@@ -105,6 +101,13 @@ function downloadPython() {
   download_packages "libpython2.7"
 }
 
+function removePythonDEBs() {
+  find $APT_CACHE_DIR/archives -name "*python*.deb" -type f -delete
+  status "SEE BELOW 2!!!!!!"
+  ls -la $APT_CACHE_DIR/archives
+  status "SEE ABOVE 2!!!!!!"
+}
+
 function installAppManagement() {
   status "installAppManagement start"
   # Find boot script file
@@ -124,4 +127,14 @@ function installAppManagement() {
   status "installAppManagement end"
 }
 
-installAppManagement
+install_app_management() {
+  # Install App Management only if user asked for it
+  if [ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]; then
+    status "Installing App Management"
+    installAppManagement
+    status "Finished installing App Management"
+  else
+    removePythonDEBs
+    status "Skipping installation of App Management"
+  fi
+}

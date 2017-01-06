@@ -43,8 +43,8 @@ $BP_DIR/compile-extensions/bin/check_stack_support
 source $BP_DIR/lib/common.sh
 # Load caching functions
 source ${BP_DIR}/lib/cache.sh
-# Load bluemix extension utils
-source ${BP_DIR}/lib/bluemix_ext.sh
+# Load app management extension
+source ${BP_DIR}/lib/app_management.sh
 
 # Log default Swift version
 status "Default supported Swift version is $DEFAULT_SWIFT_VERSION"
