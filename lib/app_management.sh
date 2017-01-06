@@ -92,6 +92,11 @@ EOL
 status "generateAppMgmtInfo end"
 }
 
+function copyLLDBServer() {
+  # Copy lldb-server executable
+  find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
+}
+
 function installAppManagement() {
   status "installAppManagement start"
   # Find boot script file
@@ -104,7 +109,7 @@ function installAppManagement() {
     status "WARNING: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
-    installAgent && updateStartCommands && generateAppMgmtInfo
+    installAgent && updateStartCommands && generateAppMgmtInfo && copyLLDBServer
     status "installAppManagement end"
   fi
 

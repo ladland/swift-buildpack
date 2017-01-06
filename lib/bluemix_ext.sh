@@ -16,14 +16,11 @@
 ##
 
 install_app_management() {
-  # Install App Management
+  # Install App Management only if user asked for it
   if [ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]; then
     status "Installing App Management."
     source $BP_DIR/lib/app_management.sh
     status "Finished installing App Management."
-    # We may have to tweak the different handlers... see the handlers for node and liberty and compare them
-    # we may need a subset of all of these handlers for an MVP...
-    # for instance, see the start-debug handler in the libery buildpack (it requires proxy)
   else
     status "Skipping installation of App Management."
   fi
