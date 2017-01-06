@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 ##
-# Copyright IBM Corporation 2017
+# Copyright IBM Corporation 2016,2017
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,10 +35,9 @@ port = config['port'] || DropletUtils.find_port(7777, 8777)
 # Start lldb-server process
 pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
 Process.detach(pid)
-#sleep(2)
 pid = `pidof lldb-server`.strip.to_i
 pgid = Process.getpgid(pid)
-Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
+Utils::SimpleLogger.info("-----> lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
 
 #system("ps", "-ef", out: $stdout, err: :out)
 #system("ls -la /home/vcap/app/.swift-bin", out: $stdout, err: :out)

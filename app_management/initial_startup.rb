@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 ##
-# Copyright IBM Corporation 2016
+# Copyright IBM Corporation 2016,2017
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,9 +56,6 @@ def run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
   Utils::SimpleLogger.warning("Ignoring unrecognized app management utilities: #{invalid_handlers.join(', ')}") unless invalid_handlers.empty?
   Utils::SimpleLogger.info("Activating app management utilities: #{valid_handlers.join(', ')}")
 
-  # get environment for handlers
-  #env = get_environment(app_dir)
-
   # sort handlers for sync and async execution
   sync_handlers, async_handlers = handlers.executions(valid_handlers)
 
@@ -77,18 +74,13 @@ def write_json(file, key, value)
   end
 end
 
-STDERR.puts "BEGIN 1"
-
 handler_list = get_handler_list
-
-STDERR.puts "handler_list: #{handler_list}"
+Utils::SimpleLogger.info("-----> App Management handlers: #{handler_list}")
 
 if handler_list.nil? || handler_list.empty?
   # No handlers are specified. Start the runtime normally.
-  STDERR.puts "BEGIN 2"
   start_runtime(app_dir)
 else
-  STDERR.puts "BEGIN 5"
   handlers_dir = File.join(app_mgmt_dir, 'handlers')
 
   handlers = Utils::Handlers.new(handlers_dir)
@@ -104,7 +96,6 @@ else
     index = JSON.parse(ENV['VCAP_APPLICATION'])['instance_index']
     if index != 0
       # Start the runtime normally. Only allow dev mode on index 0
-      STDERR.puts "BEGIN 3"
       start_runtime(app_dir)
     else
       # Run handlers
@@ -116,11 +107,9 @@ else
     end
   else
     # Run handlers
-    STDERR.puts "BEGIN 6"
     run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
 
     # Start runtime
-    STDERR.puts "BEGIN 4"
     start_runtime(app_dir)
   end
 end
