@@ -249,3 +249,5 @@ done
 PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
 set-env PATH '$HOME/.swift-bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LIBRARY_PATH'
+
+echo "PATH IS: $PATH"
