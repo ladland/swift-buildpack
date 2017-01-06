@@ -42,8 +42,8 @@ system("echo $PATH", out: $stdout, err: :out)
 system("ps", "-ef", out: $stdout, err: :out)
 #system("ls -la /tmp/cache/swift-3.0.2/swift-3.0.2-RELEASE-ubuntu14.04/usr/bin", out: $stdout, err: :out)
 system("ls -la /home/vcap/app/.swift-bin", out: $stdout, err: :out)
-#system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
-#system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)
+system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
+system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)
 
 
 #{}`ps -ef | grep #{pid}`
