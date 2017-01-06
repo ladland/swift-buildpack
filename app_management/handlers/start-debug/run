@@ -34,6 +34,8 @@ port = config['port'] || DropletUtils.find_port(7777, 8777)
 
 pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
 Process.detach(pid)
+sleep(2)
+pid = `pidof lldb-server`
 pgid = Process.getpgid(pid)
 Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
 
