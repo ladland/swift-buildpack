@@ -113,7 +113,7 @@ function installAppManagement() {
   # Find boot script file
   start_cmd=$($BP_DIR/lib/find_start_cmd.rb $BUILD_DIR)
 
-  status "start_cmd: $start_cmd"
+  status "start_cmd (app_management): $start_cmd"
 
   if [ "$start_cmd" == "" ]; then
     status "WARNING: App Management cannot be installed because the start command could not be found."
