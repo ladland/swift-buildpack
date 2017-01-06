@@ -40,6 +40,8 @@ port = config['port'] || DropletUtils.find_port(7777, 8777)
 
 system("echo $PATH", out: $stdout, err: :out)
 system("ps", "-ef", out: $stdout, err: :out)
+system("ls -la /tmp/cache/swift-3.0.2/swift-3.0.2-RELEASE-ubuntu14.04/usr/bin", "-ef", out: $stdout, err: :out)
+system("ls -la /home/vcap/app/.swift-bin", "-ef", out: $stdout, err: :out)
 #system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
 #system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)
 
