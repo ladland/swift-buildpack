@@ -91,15 +91,12 @@ status "generateAppMgmtInfo end"
 function copyLLDBServer() {
   # Copy lldb-server executable to .swift-bin
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
-  status "SEE BELOW!!!!!!"
-  ls -la $BUILD_DIR/.swift-bin
-  status "SEE ABOVE!!!!!!"
 }
 
 function downloadPython() {
   status "Getting Python"
-  local packages=('libpython2.7')
-  download_packages "${packages[@]}"
+  local pkgs=('libpython2.7')
+  download_packages "${pkgs[@]}"
 }
 
 function removePythonDEBs() {
