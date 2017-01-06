@@ -108,7 +108,7 @@ download_packages() {
   local packages=("$@")
   for package in "${packages[@]}"; do
     # Check if CACHE_DIR already contains DEB file for package
-    if [ -f $APT_CACHE_DIR/archives/$package*.deb ]; then
+    if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
       status "$package was already downloaded."
       # Remove element from array if DEB file already downloaded
       unset 'packages[${package}]'
