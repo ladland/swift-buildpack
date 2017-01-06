@@ -95,6 +95,9 @@ status "generateAppMgmtInfo end"
 function copyLLDBServer() {
   # Copy lldb-server executable
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
+  status "OK.... just copied lldbserver..."
+  ls -la $BUILD_DIR/.swift-bin
+  status "SEE ABOVE!!!"
 }
 
 function installAppManagement() {
