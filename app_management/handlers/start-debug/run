@@ -38,7 +38,7 @@ port = config['port'] || DropletUtils.find_port(7777, 8777)
 #pgid = Process.getpgid(pid)
 #Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
 
-system("echo", "$PATH", out: $stdout, err: :out)
+system("echo $PATH", out: $stdout, err: :out)
 system("ps", "-ef", out: $stdout, err: :out)
 #system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
 #system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)
