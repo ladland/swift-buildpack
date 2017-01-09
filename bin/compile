@@ -206,6 +206,7 @@ cp $BUILD_DIR/.build/release/*.so $BUILD_DIR/.swift-lib 2>/dev/null || true
 #TO BE REMOVED
 echo TEST1
 cp $SWIFT_PATH/usr/lib/*.so $BUILD_DIR/.swift-lib
+cp $SWIFT_PATH/usr/lib/*.so.* $BUILD_DIR/.swift-lib
 ls -la $BUILD_DIR/.swift-lib
 echo TEST2
 #TO BE REMOVED
