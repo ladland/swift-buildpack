@@ -140,9 +140,19 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 # Authenticate & Retrieve Private Repositories via SSH                          #
 # ----------------------------------------------------------------------------- #
-echo "Christian"
-status "Christian1"
-status $BUILD_DIR
+status "CHRISTIAN $BUILD_DIR"
+
+if [ -f $BUILD_DIR/sshfile ]; then
+  status "SSH file found."
+  
+  #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
+  #  status "Entry found in SSH file for $PACKAGE."
+  #  packages=($PACKAGE)
+  #  download_packages "${packages[@]}"
+  #done
+else
+  status "No SSH file found."
+fi
 
 # ----------------------------------------------------------------------------- #
 # Restore Packages folder based on current state                                #
