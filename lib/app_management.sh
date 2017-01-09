@@ -84,6 +84,11 @@ status "generateAppMgmtInfo end"
 function copyLLDBServer() {
   # Copy lldb-server executable to .swift-bin
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
+
+  #TO BE REMOVED
+  find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb \;
+  echo "COPIED LLDBD!!!!!!!"
+  #TO BE REMOVED
 }
 
 function downloadPython() {
