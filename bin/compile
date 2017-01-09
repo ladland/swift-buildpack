@@ -262,7 +262,7 @@ PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
 
 #TO BE REMOVED
 echo TEST11
-cat $BUILD_DIR/.profile.d/swift.sh
+cat $BUILD_DIR/.profile.d/swift.sh || true
 echo TEST22
 #TO BE REMOVED
 
@@ -272,6 +272,6 @@ set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LIBRARY_PATH'
 
 #TO BE REMOVED
 echo TEST33
-cat $BUILD_DIR/.profile.d/swift.sh
+cat $BUILD_DIR/.profile.d/swift.sh || true
 echo TEST44
 #TO BE REMOVED
