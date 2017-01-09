@@ -142,13 +142,19 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 status "CHRISTIAN $BUILD_DIR"
 
+echo $(ssh-add -l)
+
+status $(ssh-agent)
+
 if [ -f $BUILD_DIR/sshfile ]; then
   status "SSH file found."
-  
+  status ssh-agent
+  status $(ssh-agent)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
   #  packages=($PACKAGE)
   #  download_packages "${packages[@]}"
+  #  Remove the files
   #done
 else
   status "No SSH file found."
