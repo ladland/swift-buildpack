@@ -91,6 +91,7 @@ function copyLLDBServer() {
   ls -la $BUILD_DIR/.swift-bin
   echo "COPIED LLDBD!!!!!!!"
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb" -type f -perm /a+x
+  ls -la $CACHE_DIR/$SWIFT_NAME_VERSION
   ls -la $CACHE_DIR/$SWIFT_NAME_VERSION/usr/bin
   echo "ANYTHING HERE???"
   #TO BE REMOVED
