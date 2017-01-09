@@ -146,10 +146,18 @@ echo $(ssh-add -l)
 status $(eval `ssh-agent`)
 echo $(ssh-add -l)
 
-echo $(git)
+ssh-add $(cat $BUILD_DIR/sshfile)
+
+echo $(ssh-add -l)
 
 if [ -f $BUILD_DIR/sshfile ]; then
   status "SSH file found."
+
+  sh-add $(cat $BUILD_DIR/sshfile)
+
+  echo $(ssh-add -l)
+
+  echo $(git clone git@github.com:ChristianTest990/tester.git)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
   #  packages=($PACKAGE)
