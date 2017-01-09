@@ -143,12 +143,10 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 status "CHRISTIAN $BUILD_DIR"
 
 echo $(ssh-add -l)
-status $(eval `ssh-agent -s`)
+eval $(ssh-agent)
 echo $(ssh-add -l)
 
-ssh-add $(cat $BUILD_DIR/sshfile)
-
-echo $(ssh-add -l)
+echo $(ssh-add)
 
 if [ -f $BUILD_DIR/sshfile ]; then
   status "SSH file found."
