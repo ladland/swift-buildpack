@@ -22,7 +22,7 @@ module Utils
   class HandlerUtils
 
     def self.get_configuration(handler_name)
-      var_name      = environment_variable_name(handler_name)
+      var_name = environment_variable_name(handler_name)
       user_provided = ENV[var_name]
       if user_provided
         begin
