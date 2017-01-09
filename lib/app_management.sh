@@ -16,7 +16,6 @@
 ##
 
 function installAgent() {
-  status "installAgent start"
   mkdir $BUILD_DIR/.app-management
   mkdir $BUILD_DIR/.app-management/utils
   mkdir $BUILD_DIR/.app-management/handlers
@@ -33,18 +32,17 @@ function installAgent() {
   chmod +x $BUILD_DIR/.app-management/scripts/*
   chmod -R +x $BUILD_DIR/.app-management/handlers/
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
-  status "installAgent end"
 }
 
 # https://docs.cloudfoundry.org/buildpacks/custom.html#release-script
 function updateStartCommands() {
-  status "updateStartCommands start"
   # Update start command on start script (used by agent/initial startup)
   local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
   sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
   # Use initial_startup to start application
   sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
-
+  status "Updated start command in Procfile:"
+  cat ${BUILD_DIR}/Procfile | indent
 
   #if test -f ${BUILD_DIR}/Procfile; then
   #  status "updateStartCommands fi 1"
@@ -61,13 +59,8 @@ function updateStartCommands() {
   #  echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
   #fi
 
-  status "HERE 1"
-  cat ${BUILD_DIR}/Procfile
-  status "HERE 2"
-
   # Update env vars used for dev mode
   #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
-  status "updateStartCommands end"
 }
 
 function generateAppMgmtInfo() {
@@ -101,9 +94,6 @@ function downloadPython() {
 
 function removePythonDEBs() {
   find $APT_CACHE_DIR/archives -name "*python*.deb" -type f -delete
-  status "SEE BELOW 2!!!!!!"
-  ls -la $APT_CACHE_DIR/archives
-  status "SEE ABOVE 2!!!!!!"
 }
 
 function installAppManagement() {
