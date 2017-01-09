@@ -151,6 +151,8 @@ echo $(ssh-add -l)
 if [ -f $BUILD_DIR/sshfile ]; then
   status "SSH file found."
 
+  ssh-keygen -R github.com
+
   ssh-add $BUILD_DIR/sshfile
 
   echo $(ssh-add -l)
