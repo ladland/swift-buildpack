@@ -146,12 +146,12 @@ echo $(ssh-add -l)
 eval $(ssh-agent)
 echo $(ssh-add -l)
 
-echo $(ssh-add)
+#echo $(ssh-add)
 
 if [ -f $BUILD_DIR/sshfile ]; then
   status "SSH file found."
 
-  ssh-add $(cat $BUILD_DIR/sshfile)
+  ssh-add $BUILD_DIR/sshfile
 
   echo $(ssh-add -l)
 
