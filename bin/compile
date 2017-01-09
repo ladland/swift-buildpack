@@ -138,6 +138,13 @@ CLANG_PATH=$CACHE_DIR/$(echo $CLANG_NAME_VERSION/clang*)
 export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 
 # ----------------------------------------------------------------------------- #
+# Authenticate & Retrieve Private Repositories via SSH                          #
+# ----------------------------------------------------------------------------- #
+echo "Christian"
+status "Christian1"
+status $BUILD_DIR
+
+# ----------------------------------------------------------------------------- #
 # Restore Packages folder based on current state                                #
 # ----------------------------------------------------------------------------- #
 restore_cache() {
