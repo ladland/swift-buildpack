@@ -21,6 +21,14 @@
 set -e
 set -o pipefail
 
+
+#TO BE REMOVED
+echo TEST100
+cat $BUILD_DIR/.profile.d/swift.sh || true
+echo TEST200
+echo "home is $HOME"
+#TO BE REMOVED
+
 if [[ "${BP_DEBUG}X" != "X" ]]; then
   # Show all commands
   set -x
@@ -264,6 +272,7 @@ PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
 echo TEST11
 cat $BUILD_DIR/.profile.d/swift.sh || true
 echo TEST22
+echo "home is $HOME"
 #TO BE REMOVED
 
 
