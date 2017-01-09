@@ -276,8 +276,8 @@ echo "home is $HOME"
 #TO BE REMOVED
 
 
-set-env PATH '$HOME/app/.swift-bin:$PATH'
-set-env LD_LIBRARY_PATH '$HOME/app/.swift-lib:$LD_LIBRARY_PATH'
+set-env PATH '$HOME/.swift-bin:$PATH'
+set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LD_LIBRARY_PATH'
 
 #TO BE REMOVED
 echo TEST33
