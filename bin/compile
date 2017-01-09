@@ -33,6 +33,7 @@ BP_DIR=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$BP_DIR/bin
 BUILDPACK_PATH=$BP_DIR
 PACKAGES_DIR="Packages"
+BUILD_CONFIGURATION="release"
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
@@ -196,7 +197,12 @@ else
   SWIFT_BUILD_OPTIONS=""
 fi
 
-swift build --configuration release $SWIFT_BUILD_OPTIONS -Xcc -I$BUILD_DIR/.apt/usr/include -Xlinker -L$BUILD_DIR/.apt/usr/lib -Xlinker -L$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu -Xlinker -rpath=$BUILD_DIR/.apt/usr/lib | indent
+if [[ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]] && [[ $BLUEMIX_APP_MGMT_ENABLE == *"debug"* ]]; then
+  BUILD_CONFIGURATION="debug"
+fi
+status "Build config: $BUILD_CONFIGURATION"
+
+swift build --configuration $BUILD_CONFIGURATION $SWIFT_BUILD_OPTIONS -Xcc -I$BUILD_DIR/.apt/usr/include -Xlinker -L$BUILD_DIR/.apt/usr/lib -Xlinker -L$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu -Xlinker -rpath=$BUILD_DIR/.apt/usr/lib | indent
 
 # These should be statically linked, seems a Swift bug.
 status "Copying dynamic libraries"
