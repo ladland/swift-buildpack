@@ -259,5 +259,19 @@ done
 # Set up application environment                                                #
 # ----------------------------------------------------------------------------- #
 PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
+
+#TO BE REMOVED
+echo TEST11
+cat $BUILD_DIR/.profile.d/swift.sh
+echo TEST22
+#TO BE REMOVED
+
+
 set-env PATH '$HOME/.swift-bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LIBRARY_PATH'
+
+#TO BE REMOVED
+echo TEST33
+cat $BUILD_DIR/.profile.d/swift.sh
+echo TEST44
+#TO BE REMOVED
