@@ -151,27 +151,36 @@ echo $(ssh-add -l)
 if [ -f $BUILD_DIR/id_rsa ]; then
   status "SSH file found."
 
-  mkdir -p ~/.ssh 
+  mkdir -p ~/.ssh
+  touch ~/.ssh/known_hosts 
   cp $BUILD_DIR/id_rsa ~/.ssh
 
-  cd ~/.ssh
   echo $(ls)
+
+  #cd ~/.ssh
+  #echo $(ls)
   #status $(more ~/.ssh/authorized_keys)
-  cd ../
+  #cd ../
 
   #ssh-add $BUILD_DIR/sshfile
   ssh-add
 
-  cd ~/.ssh
+  #cd ~/.ssh
   echo $(ls)
 
-  status $(more ~/.ssh/id_rsa)
+  #status $(more ~/.ssh/id_rsa)
 
-  cd ../
-
+  #cd ../
+  echo "Verifying key was added..."
   echo $(ssh-add -l)
 
+  ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+  echo "Verifying known_hosts was added..."
+  echo $(more ~/.ssh/known_hosts)
+
   status $(ssh -vT git@github.com)
+
 
   echo $(git clone git@github.com:ChristianTest990/tester.git)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
