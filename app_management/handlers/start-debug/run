@@ -18,7 +18,7 @@
 
 require 'fileutils'
 
-# directories
+# Directories
 INSTALL_DIR = File.expand_path('../../..', File.dirname(__FILE__)).freeze
 APP_MGMT_DIR = File.join(INSTALL_DIR, '.app-management').freeze
 
@@ -38,8 +38,3 @@ Process.detach(pid)
 pid = `pidof lldb-server`.strip.to_i
 pgid = Process.getpgid(pid)
 Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
-
-#system("ps", "-ef", out: $stdout, err: :out)
-#system("ls -la /home/vcap/app/.swift-bin", out: $stdout, err: :out)
-#system("cat", "#{APP_MGMT_DIR}/lldb-server.out", out: $stdout, err: :out)
-#system("cat", "#{APP_MGMT_DIR}/lldb-server.err", out: $stdout, err: :out)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##
-# Copyright IBM Corporation 2016
+# Copyright IBM Corporation 2016,2017
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ elif [[ "${BLUEMIX_APP_MGMT_ENABLE}" != "" ]]; then
     kill_process $runtime_pid -9
   fi
 else
+  #TODO - What should happen here?
   #killall node -s SIGINT
   ###??????
 fi

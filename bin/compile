@@ -210,13 +210,13 @@ status "Copying dynamic libraries"
 cp $SWIFT_PATH/usr/lib/swift/linux/*.so $BUILD_DIR/.swift-lib
 cp $BUILD_DIR/.build/$BUILD_CONFIGURATION/*.so $BUILD_DIR/.swift-lib 2>/dev/null || true
 
-#TO BE REMOVED
+##TO BE REMOVED
 echo TEST1
 cp $SWIFT_PATH/usr/lib/*.so $BUILD_DIR/.swift-lib
 cp $SWIFT_PATH/usr/lib/*.so.* $BUILD_DIR/.swift-lib
 ls -la $BUILD_DIR/.swift-lib
 echo TEST2
-#TO BE REMOVED
+##TO BE REMOVED
 
 status "Copying binaries to 'bin'"
 find $BUILD_DIR/.build/$BUILD_CONFIGURATION -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin \;
@@ -266,20 +266,5 @@ done
 # Set up application environment                                                #
 # ----------------------------------------------------------------------------- #
 PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
-
-#TO BE REMOVED
-echo TEST11
-cat $BUILD_DIR/.profile.d/swift.sh || true
-echo TEST22
-echo "home is $HOME"
-#TO BE REMOVED
-
-
 set-env PATH '$HOME/.swift-bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LD_LIBRARY_PATH'
-
-#TO BE REMOVED
-echo TEST33
-cat $BUILD_DIR/.profile.d/swift.sh || true
-echo TEST44
-#TO BE REMOVED

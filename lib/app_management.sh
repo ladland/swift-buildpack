@@ -34,7 +34,6 @@ function installAgent() {
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
 }
 
-# https://docs.cloudfoundry.org/buildpacks/custom.html#release-script
 function updateStartCommands() {
   # Update start command on start script (used by agent/initial startup)
   local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
@@ -43,24 +42,6 @@ function updateStartCommands() {
   sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
   status "Updated start command in Procfile:"
   cat ${BUILD_DIR}/Procfile | indent
-
-  #if test -f ${BUILD_DIR}/Procfile; then
-  #  status "updateStartCommands fi 1"
-  #  local start_command=$(sed -n -e '/^web:/p' ${BUILD_DIR}/Procfile | sed 's/^web: //')
-  #   sed -i s#%COMMAND%#"${start_command}"# "${BUILD_DIR}"/.app-management/scripts/start
-
-    # Use initial_startup to start application
-  #  sed -i 's#web:.*#web: ./.app-management/initial_startup.rb#' $BUILD_DIR/Procfile
-  #else
-  #  status "updateStartCommands fi 2"
-  #  sed -i s#%COMMAND%#"npm start"# "${BUILD_DIR}"/.app-management/scripts/start
-    # Use initial_startup to start application
-  #  touch $BUILD_DIR/Procfile
-  #  echo "web: ./.app-management/initial_startup.rb" > $BUILD_DIR/Procfile
-  #fi
-
-  # Update env vars used for dev mode
-  #echo "export BOOT_SCRIPT=${start_cmd}" >> ${BUILD_DIR}/.profile.d/bluemix_env.sh
 }
 
 function generateAppMgmtInfo() {
@@ -84,14 +65,8 @@ status "generateAppMgmtInfo end"
 function copyLLDBServer() {
   # Copy lldb-server executable to .swift-bin
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
-
-  #TO BE REMOVED
-  echo "COPYING LLDBD!!!!!!!"
-  find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-3.9.0" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb \;
-  ls -la $BUILD_DIR/.swift-bin
-  echo "COPIED LLDBD!!!!!!!"
-  echo "ANYTHING HERE???"
-  #TO BE REMOVED
+  # Copy lldb program as well (this is not actually needed for remote debugging... copying it for now)
+  find $CACHE_DIR/$SWIFT_NAME_VERSION -regex ".*/lldb-[0-9][0-9.]*"  -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb \;
 }
 
 function downloadPython() {
