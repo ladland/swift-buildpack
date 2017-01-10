@@ -153,7 +153,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   mkdir -p ~/.ssh
   touch ~/.ssh/known_hosts 
-  cp $BUILD_DIR/id_rsa ~/.ssh
+  cp $BUILD_DIR/.sshkeys ~/.ssh
 
   #echo $(ls)
 
