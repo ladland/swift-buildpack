@@ -199,7 +199,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   echo $(ssh-add -l)
 
   echo $(ls -l)
-  echo $(rm -f .sshkeys)
+  echo $(rm -f $BUILD_DIR/.sshkeys)
   echo $(ls -l)
 
 
