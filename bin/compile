@@ -163,7 +163,12 @@ if [ -f $BUILD_DIR/sshfile ]; then
 
   ssh-add $BUILD_DIR/sshfile
 
+  cd ~/.ssh
+  echo $(ls)
+
   status $(more ~/.ssh/authorized_keys)
+
+  cd ../
 
   echo $(ssh-add -l)
 
