@@ -183,7 +183,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   status $(ls)
 
 
-  echo $(git clone git@github.com:ChristianTest990/tester.git)
+  echo $(git clone git@github.com:ChristianTest990/tester.git $BUILD_DIR/Packages)
   status $(ls)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
