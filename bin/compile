@@ -163,6 +163,8 @@ if [ -f $BUILD_DIR/sshfile ]; then
 
   ssh-add $BUILD_DIR/sshfile
 
+  status $(more ~/.ssh/authorized_keys)
+
   echo $(ssh-add -l)
 
   status $(ssh -vT git@github.com)
