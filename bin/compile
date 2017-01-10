@@ -153,7 +153,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   mkdir -p ~/.ssh
   touch ~/.ssh/known_hosts 
-  cp $BUILD_DIR/.sshkeys ~/.ssh
+  #cp $BUILD_DIR/id_rsa ~/.ssh
 
   #echo $(ls)
 
@@ -163,8 +163,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #cd ../
 
   #ssh-add $BUILD_DIR/sshfile
-  #ssh-add $BUILD_DIR/.sshkeys
-  ssh-add
+  ssh-add $BUILD_DIR/.sshkeys
 
   #cd ~/.ssh
   #echo $(ls)
@@ -187,7 +186,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #echo $(git clone git@github.com:ChristianTest990/tester.git $BUILD_DIR/Packages) #Git Public
   #
   #echo $(git clone git@github.ibm.com:TestingSSH/tester.git $BUILD_DIR/Packages/test2) #GHE Private
-  echo $(git clone git@github.ibm.com:TestingSSH/pubSSH.git $BUILD_DIR/Packages/tester) #GHE Public
+  echo $(git clone git@github.ibm.com:TestingSSH/pubSSH.git $BUILD_DIR/Packages/test3) #GHE Public
 
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
@@ -195,6 +194,19 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #  download_packages "${packages[@]}"
   #  Remove the files
   #done
+  echo "Removing SSH file & Keys"
+  echo $(ssh-add -D)
+  echo $(ssh-add -l)
+  echo $(rm -f .sshkeys)
+
+
+
+
+
+
+
+
+
 else
   status "No SSH file found."
 fi
