@@ -148,25 +148,24 @@ echo $(ssh-add -l)
 
 #echo $(ssh-add)
 
-if [ -f $BUILD_DIR/sshfile ]; then
+if [ -f $BUILD_DIR/id_rsa ]; then
   status "SSH file found."
 
   mkdir -p ~/.ssh 
-  touch ~/.ssh/authorized_keys
+  cp id_rsa ~/.ssh
 
   cd ~/.ssh
   echo $(ls)
-
-  status $(more ~/.ssh/authorized_keys)
-
+  #status $(more ~/.ssh/authorized_keys)
   cd ../
 
-  ssh-add $BUILD_DIR/sshfile
+  #ssh-add $BUILD_DIR/sshfile
+  ssh-add
 
   cd ~/.ssh
   echo $(ls)
 
-  status $(more ~/.ssh/authorized_keys)
+  status $(more ~/.ssh/id_rsa)
 
   cd ../
 
