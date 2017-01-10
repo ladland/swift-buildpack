@@ -152,7 +152,7 @@ if [ -f $BUILD_DIR/id_rsa ]; then
   status "SSH file found."
 
   mkdir -p ~/.ssh 
-  cp id_rsa ~/.ssh
+  cp $BUILD_DIR/id_rsa ~/.ssh
 
   cd ~/.ssh
   echo $(ls)
