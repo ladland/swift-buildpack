@@ -175,7 +175,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   echo "Verifying key was added..."
   echo $(ssh-add -l)
 
-  ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+  ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
 
   #echo "Verifying known_hosts was added..."
   #echo $(more ~/.ssh/known_hosts)
