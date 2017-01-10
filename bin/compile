@@ -174,16 +174,17 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   echo "Verifying key was added..."
   echo $(ssh-add -l)
 
-  ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+  ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
 
-  echo "Verifying known_hosts was added..."
-  echo $(more ~/.ssh/known_hosts)
+  #echo "Verifying known_hosts was added..."
+  #echo $(more ~/.ssh/known_hosts)
 
   #status $(ssh -vT git@github.com)
-  status $(ls)
+  #status $(ls)
 
 
-  echo $(git clone git@github.com:ChristianTest990/tester.git $BUILD_DIR/Packages)
+  #echo $(git clone git@github.com:ChristianTest990/tester.git $BUILD_DIR/Packages)
+  echo $(git clone git@github.ibm.com:TestingSSH/tester.git $BUILD_DIR/Packages/test2)
   status $(ls)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
