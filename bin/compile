@@ -148,14 +148,14 @@ echo $(ssh-add -l)
 
 #echo $(ssh-add)
 
-if [ -f $BUILD_DIR/id_rsa ]; then
+if [ -f $BUILD_DIR/.sshkeys ]; then
   status "SSH file found."
 
   mkdir -p ~/.ssh
   touch ~/.ssh/known_hosts 
-  cp $BUILD_DIR/id_rsa ~/.ssh
+  #cp $BUILD_DIR/id_rsa ~/.ssh
 
-  echo $(ls)
+  #echo $(ls)
 
   #cd ~/.ssh
   #echo $(ls)
@@ -163,10 +163,10 @@ if [ -f $BUILD_DIR/id_rsa ]; then
   #cd ../
 
   #ssh-add $BUILD_DIR/sshfile
-  ssh-add
+  ssh-add $BUILD_DIR/.sshkeys
 
   #cd ~/.ssh
-  echo $(ls)
+  #echo $(ls)
 
   #status $(more ~/.ssh/id_rsa)
 
@@ -179,10 +179,12 @@ if [ -f $BUILD_DIR/id_rsa ]; then
   echo "Verifying known_hosts was added..."
   echo $(more ~/.ssh/known_hosts)
 
-  status $(ssh -vT git@github.com)
+  #status $(ssh -vT git@github.com)
+  status $(ls)
 
 
   echo $(git clone git@github.com:ChristianTest990/tester.git)
+  status $(ls)
   #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
   #  status "Entry found in SSH file for $PACKAGE."
   #  packages=($PACKAGE)
