@@ -80,7 +80,6 @@ function removePythonDEBs() {
 }
 
 function installAppManagement() {
-  status "installAppManagement start"
   # Find boot script file
   start_cmd=$($BP_DIR/lib/find_start_cmd.rb $BUILD_DIR)
 
@@ -92,10 +91,7 @@ function installAppManagement() {
   else
     # Install development mode utilities
     installAgent && updateStartCommands && generateAppMgmtInfo && copyLLDBServer && downloadPython
-    status "installAppManagement end"
   fi
-
-  status "installAppManagement end"
 }
 
 install_app_management() {
