@@ -153,6 +153,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   mkdir -p ~/.ssh
   touch ~/.ssh/config 
+  touch ~/.ssh/known_hosts
   #cp $BUILD_DIR/id_rsa ~/.ssh
 
   #echo $(ls)
@@ -183,7 +184,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   cd ../
 
-  #ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
+  ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
 
   #echo "Verifying known_hosts was added..."
   #echo $(more ~/.ssh/known_hosts)
