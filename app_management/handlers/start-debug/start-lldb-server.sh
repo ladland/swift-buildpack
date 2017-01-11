@@ -16,7 +16,7 @@
 ##
 
 PORT=$1
-APP_MGMT_DIR=$(dirname "$0")/..
+APP_MGMT_DIR=$(dirname "$0")/../..
 
 echo "PORT: $PORT"
 echo "APP_MGMT_DIR: $APP_MGMT_DIR"
