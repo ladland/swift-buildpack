@@ -33,7 +33,6 @@ function installAgent() {
   chmod +x $BUILD_DIR/.app-management/scripts/*
   chmod -R +x $BUILD_DIR/.app-management/handlers/
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
-  chmod +x $BUILD_DIR/.app-management/setup-ssh-sesssion.sh
 }
 
 function updateStartCommands() {
