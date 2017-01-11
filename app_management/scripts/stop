@@ -19,8 +19,6 @@
 # This will handle cases where the app crashes ahead of time, or we try to kill two of the same thing.
 set +e
 
-app_management=$(dirname "$0")/..
-
 # Recursively delete pid and all children of pid
 function kill_process() {
   local parent_pid=$1
