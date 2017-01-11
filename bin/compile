@@ -142,9 +142,9 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 status "CHRISTIAN $BUILD_DIR"
 
-echo $(ssh-add -l)
+#echo $(ssh-add -l)
 #eval $(ssh-agent)
-echo $(ssh-add -l)
+#echo $(ssh-add -l)
 
 #echo $(ssh-add)
 
@@ -174,15 +174,15 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   cat $BUILD_DIR/.sshkeys > ~/.ssh/config
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
-  cd ~/.ssh
+  #cd ~/.ssh
   #rename
   #mv ".sshkeys" config
 
-  echo $(ls)
+  #echo $(ls)
 
-  status $(cat config)
+  #status $(cat config)
 
-  cd ../
+  #cd ../
 
   ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
 
@@ -204,21 +204,15 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #  download_packages "${packages[@]}"
   #  Remove the files
   #done
-  echo "Removing SSH file & Keys"
-  echo $(ssh-add -D)
-  echo $(ssh-add -l)
+  echo "Removing SSH files & keys"
+  #echo $(ssh-add -D)
+  #echo $(ssh-add -l)
 
-  echo $(ls -l)
-  echo $(rm -f $BUILD_DIR/.sshkeys)
-  echo $(ls -l)
-
-
-
-
-
-
-
-
+  #echo $(ls -l)
+  rm -f $BUILD_DIR/.sshkeys #remove their config file
+  rm -rf $BUILD_DIR/.ssh #remove their .ssh folder
+  rm -rf ~/.ssh #remove our .ssh folder
+  #echo $(ls -l)
 
 else
   status "No SSH file found."
