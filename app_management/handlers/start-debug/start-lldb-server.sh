@@ -18,10 +18,7 @@
 PORT=$1
 APP_MGMT_DIR=$(dirname "$0")/../..
 
-echo "PORT: $PORT"
-echo "APP_MGMT_DIR: $APP_MGMT_DIR"
-
 until lldb-server platform --listen *:$PORT >>$APP_MGMT_DIR/lldb-server.log 2>&1; do
-    echo "lldb-server exited with exit code $?. Restarting it..." >>$APP_MGMT_DIR/start-lldb-server.log 2>&1
+    echo "lldb-server exited with exit code $?. Restarting it..."
     sleep 1
 done
