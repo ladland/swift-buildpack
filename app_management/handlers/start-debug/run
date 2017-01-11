@@ -33,8 +33,10 @@ config = Utils::HandlerUtils.get_configuration('debug')
 port = config['port'] || DropletUtils.find_port(7777, 8777)
 
 # Start lldb-server process
-pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
+#pid = spawn("lldb-server platform --listen *:#{port}", :out => "#{APP_MGMT_DIR}/lldb-server.out", :err => "#{APP_MGMT_DIR}/lldb-server.err")
+pid = spawn("#{APP_MGMT_DIR}/handlers/start-debug/start-lldb-server.sh #{port}", :out => "#{APP_MGMT_DIR}/start-lldb-server.out", :err => "#{APP_MGMT_DIR}/start-lldb-server.err")
 Process.detach(pid)
+sleep 1
 pid = `pidof lldb-server`.strip.to_i
 pgid = Process.getpgid(pid)
-Utils::SimpleLogger.info("lldb-server (pid: #{pid}, pgid: #{pgid}) is listening on port #{port}.")
+Utils::SimpleLogger.info("lldb-server (pid: #{pid}) is listening on port #{port}.")
