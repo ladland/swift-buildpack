@@ -179,6 +179,8 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   echo $(ls)
 
+  status $(cat config)
+
   cd ../
 
   #ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
