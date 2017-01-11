@@ -175,7 +175,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
 
   cd ~/.ssh
   #rename
-  mv ".sshkeys" config
+  #mv ".sshkeys" config
 
   echo $(ls)
 
