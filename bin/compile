@@ -171,7 +171,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #cp $BUILD_DIR/ghePub ~/.ssh
 
   cat $BUILD_DIR/.sshkeys > ~/.ssh/config
-  cp $BUILD_DIR/.ssh ~/.ssh
+  cp $BUILD_DIR/.ssh/* ~/.ssh
 
   cd ~/.ssh
   #rename
