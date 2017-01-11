@@ -167,6 +167,9 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   ssh-add $BUILD_DIR/ghePriv
   ssh-add $BUILD_DIR/ghePub
 
+  cp $BUILD_DIR/ghePriv ~/.ssh
+  cp $BUILD_DIR/ghePub ~/.ssh
+
   #cd ~/.ssh
   #echo $(ls)
 
