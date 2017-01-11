@@ -27,11 +27,13 @@ function installAgent() {
 
   cp $BP_DIR/app_management/initial_startup.rb $BUILD_DIR/.app-management
   cp $BP_DIR/app_management/env.json $BUILD_DIR/.app-management
+  cp $BP_DIR/app_management/setup-ssh-sesssion.sh $BUILD_DIR/.app-management
 
   chmod +x $BUILD_DIR/.app-management/utils/*
   chmod +x $BUILD_DIR/.app-management/scripts/*
   chmod -R +x $BUILD_DIR/.app-management/handlers/
   chmod +x $BUILD_DIR/.app-management/initial_startup.rb
+  chmod +x $BUILD_DIR/.app-management/setup-ssh-sesssion.sh
 }
 
 function updateStartCommands() {
