@@ -204,14 +204,15 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #  download_packages "${packages[@]}"
   #  Remove the files
   #done
-  echo "Removing SSH files & keys"
+  
   #echo $(ssh-add -D)
   #echo $(ssh-add -l)
 
   #echo $(ls -l)
-  rm -f $BUILD_DIR/.sshkeys #remove their config file
-  rm -rf $BUILD_DIR/.ssh #remove their .ssh folder
-  rm -rf ~/.ssh #remove our .ssh folder
+  #echo "Removing SSH files & keys"
+  #rm -f $BUILD_DIR/.sshkeys #remove their config file
+  #rm -rf $BUILD_DIR/.ssh #remove their .ssh folder
+  #rm -rf ~/.ssh #remove our .ssh folder
   #echo $(ls -l)
 
 else
