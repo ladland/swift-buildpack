@@ -35,7 +35,7 @@ port = config['port'] || DropletUtils.find_port(7777, 8777)
 Utils::SimpleLogger.info("And HOME is #{ENV['HOME']}")
 
 # Start lldb-server process
-pid = spawn("#{APP_MGMT_DIR}/handlers/start-debug/start-lldb-server.sh #{port}", :out => "#{HOME}/logs/start-lldb-server.out", :err => "#{HOME}/logs/start-lldb-server.err")
+pid = spawn("#{APP_MGMT_DIR}/handlers/start-debug/start-lldb-server.sh #{port}", :out => "#{ENV['HOME']}/../logs/start-lldb-server.out", :err => "#{ENV['HOME']}/../logs/start-lldb-server.err")
 Process.detach(pid)
 sleep 1
 pid = `pidof lldb-server`.strip.to_i
