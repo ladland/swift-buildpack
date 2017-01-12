@@ -45,24 +45,6 @@ function updateStartCommands() {
   cat ${BUILD_DIR}/Procfile | indent
 }
 
-function generateAppMgmtInfo() {
-  status "generateAppMgmtInfo start"
-  local CONTAINER="warden"
-  local SSH_ENABLED="false"
-  local PROXY_SUPPORTED='["v1", "v2"]'
-
-  # Generate app management info file. proxy_enabled is set during startup.
-cat > $BUILD_DIR/.app-management/app_mgmt_info.json << EOL
-{
-  "container": "$CONTAINER",
-  "ssh_enabled": $SSH_ENABLED,
-  "proxy_enabled": false,
-  "proxy_supported_version": $PROXY_SUPPORTED
-}
-EOL
-status "generateAppMgmtInfo end"
-}
-
 function copyLLDBServer() {
   # Copy lldb-server executable to .swift-bin
   find $CACHE_DIR/$SWIFT_NAME_VERSION -name "lldb-server-*" -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb-server \;
@@ -91,18 +73,18 @@ function installAppManagement() {
     status "WARNING: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
-    installAgent && updateStartCommands && generateAppMgmtInfo && copyLLDBServer && downloadPython
+    installAgent && updateStartCommands && copyLLDBServer && downloadPython
   fi
 }
 
 install_app_management() {
   # Install App Management only if user asked for it
-  if [ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]; then
-    status "Installing App Management"
+  if [[ $BLUEMIX_APP_MGMT_ENABLE == *"debug"* ]]; then
+    status "Installing App Management (debug)"
     installAppManagement
-    status "Finished installing App Management"
+    status "Finished installing App Management (debug)"
   else
     removePythonDEBs
-    status "Skipping installation of App Management"
+    status "Skipping installation of App Management (debug)"
   fi
 }
