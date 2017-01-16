@@ -138,15 +138,12 @@ CLANG_PATH=$CACHE_DIR/$(echo $CLANG_NAME_VERSION/clang*)
 export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 
 # ----------------------------------------------------------------------------- #
-# Authenticate Enterprise & Private Repositories via SSH                        #
+# Verify .ssh directory & configure known_hosts for SSH                         #
 # ----------------------------------------------------------------------------- #
 if [ -f $BUILD_DIR/.sshkeys ]; then
-  status "SSH file found."
+  status "/.ssh directory found."
   mkdir -p ~/.ssh
-  touch ~/.ssh/config 
   touch ~/.ssh/known_hosts
-
-  cat $BUILD_DIR/.sshkeys > ~/.ssh/config
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
   # Add hosts to known_hosts file
@@ -156,7 +153,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   done
 
 else
-  status "No SSH file found."
+  status "/.ssh directory found."
 fi
 
 # ----------------------------------------------------------------------------- #
@@ -220,7 +217,7 @@ find $BUILD_DIR/.build/release -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-
 status "Cleaning up build files"
 rm -rf $BUILD_DIR/.build
 
-# Remove SSH folders
+# Remove /.ssh folders
 rm -rf $BUILD_DIR/.ssh
 rm -rf ~/.ssh
 
