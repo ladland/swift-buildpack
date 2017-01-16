@@ -138,87 +138,23 @@ CLANG_PATH=$CACHE_DIR/$(echo $CLANG_NAME_VERSION/clang*)
 export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 
 # ----------------------------------------------------------------------------- #
-# Authenticate & Retrieve Private Repositories via SSH                          #
+# Authenticate Enterprise & Private Repositories via SSH                        #
 # ----------------------------------------------------------------------------- #
-status "CHRISTIAN $BUILD_DIR"
-
-#echo $(ssh-add -l)
-#eval $(ssh-agent)
-#echo $(ssh-add -l)
-
-#echo $(ssh-add)
-
 if [ -f $BUILD_DIR/.sshkeys ]; then
   status "SSH file found."
 
   mkdir -p ~/.ssh
   touch ~/.ssh/config 
   touch ~/.ssh/known_hosts
-  #cp $BUILD_DIR/id_rsa ~/.ssh
-
-  #echo $(ls)
-
-  #cd ~/.ssh
-  #echo $(ls)
-  #status $(more ~/.ssh/authorized_keys)
-  #cd ../
-
-  #ssh-add $BUILD_DIR/sshfile
-  #ssh-add $BUILD_DIR/ghePub
-  #ssh-add $BUILD_DIR/ghePriv
-  #ssh-add $BUILD_DIR/ghePub
-
-  #cp $BUILD_DIR/ghePriv ~/.ssh
-  #cp $BUILD_DIR/ghePub ~/.ssh
 
   cat $BUILD_DIR/.sshkeys > ~/.ssh/config
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
-  #cd ~/.ssh
-  #rename
-  #mv ".sshkeys" config
-
-  #echo $(ls)
-
-  #status $(cat config)
-
-  #cd ../
-
-  #ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
+  # Add hosts to known_hosts file
   grep HostName ~/.ssh/config | while read line
   do
-    #echo ${line//HostName }
     ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts
   done
-
-  #echo "Verifying known_hosts was added..."
-  echo $(more ~/.ssh/known_hosts)
-
-  #status $(ssh -vT git@github.com)
-  #status $(ls)
-
-
-  #echo $(git clone git@github.com:ChristianTest990/tester.git $BUILD_DIR/Packages) #Git Public
-  #echo $(git clone git@github.com:IBM-Swift/alert-notification-sdk.git $BUILD_DIR/Packages/test4) #Git Private
-  #echo $(git clone git@ghe-priv:TestingSSH/tester.git $BUILD_DIR/Packages/test2) #GHE Private
-  #echo $(git clone git@ghe-pub:TestingSSH/pubSSH.git $BUILD_DIR/Packages/test3) #GHE Public
-
-  #for PACKAGE in $(cat $BUILD_DIR/Aptfile | sed $'s/\r$//'); do
-  #  status "Entry found in SSH file for $PACKAGE."
-  #  packages=($PACKAGE)
-  #  download_packages "${packages[@]}"
-  #  Remove the files
-  #done
-  
-  #echo $(ssh-add -D)
-  #echo $(ssh-add -l)
-
-  #echo $(ls -l)
-  #echo "Removing SSH files & keys"
-  #rm -f $BUILD_DIR/.sshkeys #remove their config file
-  #rm -rf $BUILD_DIR/.ssh #remove their .ssh folder
-  #rm -rf ~/.ssh #remove our .ssh folder
-  #echo $(ls -l)
 
 else
   status "No SSH file found."
