@@ -142,7 +142,6 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 if [ -f $BUILD_DIR/.sshkeys ]; then
   status "SSH file found."
-
   mkdir -p ~/.ssh
   touch ~/.ssh/config 
   touch ~/.ssh/known_hosts
@@ -221,10 +220,9 @@ find $BUILD_DIR/.build/release -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-
 status "Cleaning up build files"
 rm -rf $BUILD_DIR/.build
 
-#remove SSH data
-rm -f $BUILD_DIR/.sshkeys #remove their config file
-rm -rf $BUILD_DIR/.ssh #remove their .ssh folder
-rm -rf ~/.ssh #remove our .ssh folder
+# Remove SSH folders
+rm -rf $BUILD_DIR/.ssh
+rm -rf ~/.ssh
 
 # ----------------------------------------------------------------------------- #
 # Copy Packages folder from BUILD_DIR to CACHE_DIR                              #
