@@ -185,7 +185,7 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   #cd ../
 
   #ssh-keyscan -t rsa github.ibm.com >> ~/.ssh/known_hosts
-  grep HostName .sshkeys | while read line
+  grep HostName ~/.ssh/config | while read line
   do
     #echo ${line//HostName }
     ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts
