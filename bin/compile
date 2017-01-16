@@ -146,6 +146,9 @@ if [ -f $BUILD_DIR/.sshkeys ]; then
   touch ~/.ssh/known_hosts
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
+  cd ~/.ssh
+  echo $(ls -l)
+
   # Add hosts to known_hosts file
   grep HostName ~/.ssh/config | while read line
   do
