@@ -147,10 +147,10 @@ if [ -f $BUILD_DIR/.ssh/config ]; then
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
   # Add hosts to known_hosts file
-  grep HostName ~/.ssh/config | while read line
-  do
-    ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts
-  done
+  #grep HostName ~/.ssh/config | while read line
+  #do
+  #  ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts
+  #done
 
 else
   status "No .ssh directory found."
