@@ -258,8 +258,8 @@ libmysqlclient-dev
 For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh` folder in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys. The example below shows the `config` and `Package.swift` files, respectively, which use the same SSH key to access private and public repositories in enterprise and standard GitHub accounts:
 
 ```shell
-#config
-# GitHub.IBM.com -Enterprise Host, Account Key
+$ cat config
+# GitHub.IBM.com - Enterprise Host, Account Key
 Host github.ibm.com
     HostName github.ibm.com
     User git
@@ -272,21 +272,23 @@ Host github.com
     IdentityFile ~/.ssh/ssh_key
 ```
 
-```swift
-//Package.swift
+```shell
+$ cat Package.swift
+...
 dependencies: [
      ...
     .Package(url: "git@github.ibm.com:Org1/repo1.git", majorVersion: 1, minor: 0),
     .Package(url: "git@github.ibm.com:Org1/repo2.git", majorVersion: 1, minor: 0),
-    .Package(url: "git@github.com:Org/repo3.git", majorVersion: 0, minor: 0),
+    .Package(url: "git@github.com:Org2/repo3.git", majorVersion: 0, minor: 0),
     ...
   ]
+...
 ```
 
 This approach works for both SSH account keys and deployment keys.  For the example below, three keys are used - two deployment keys for the enterprise GitHub, and one account key for the standard one.
 
 ```shell
-#config
+$ cat config
 # GitHub Enterprise - repo1 deployment key
 Host enterprise1
     HostName github.ibm.com
@@ -306,15 +308,17 @@ Host github.com
     IdentityFile ~/.ssh/github_key
 ```
 
-```swift
-//Package.swift
+```shell
+$ cat Package.swift
+...
 dependencies: [
      ...
     .Package(url: "git@enterprise1:Org1/repo1.git", majorVersion: 1, minor: 0),
     .Package(url: "git@enterprise2:Org1/repo2.git", majorVersion: 1, minor: 0),
-    .Package(url: "git@github.com:Org/repo3.git", majorVersion: 0, minor: 0),
+    .Package(url: "git@github.com:Org2/repo3.git", majorVersion: 0, minor: 0),
     ...
   ]
+...
 ```
 
 ### Additional compiler flags
