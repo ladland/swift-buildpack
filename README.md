@@ -255,9 +255,10 @@ libmysqlclient-dev
 
 ### Installing closed source dependencies
 
-For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh folder` in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys, like the one shown below:
+For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh` folder in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys, like the one shown below:
 
-```# GitHub Enterprise - repo1 deployment key
+```shell
+# GitHub Enterprise - repo1 deployment key
 Host enterprise1
     HostName github.ibm.com
     User git
@@ -278,7 +279,7 @@ Host github.com
 
 This approach works for both SSH account keys and deployment keys.  For the example above, the `Package.swift` file needs to be modified to contain the following:
 
-```
+```swift
 dependencies: [
      ...
     .Package(url: "git@enterprise1:Org1/repo1.git", majorVersion: 1, minor: 0),
