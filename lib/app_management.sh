@@ -68,7 +68,7 @@ function copyDebugDEBs() {
 
 function removeDebugDEBs() {
   for DEB in $(ls -1 $BP_DIR/binary-debug-dependencies/*.deb); do
-    rm $APT_CACHE_DIR/archives/$(basename $DEB)
+    rm -f $APT_CACHE_DIR/archives/$(basename $DEB)
   done
 }
 
