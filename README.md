@@ -253,6 +253,41 @@ $ cat Aptfile
 libmysqlclient-dev
 ```
 
+### Installing closed source dependencies
+
+For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh folder` in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys, like the one shown below:
+
+```# GitHub Enterprise - repo1 deployment key
+Host enterprise1
+    HostName github.ibm.com
+    User git
+    IdentityFile ~/.ssh/githubEnterprise_key1
+
+# GitHub Enterprise - repo2 deployment key
+Host enterprise2
+    HostName github.ibm.com
+    User git
+    IdentityFile ~/.ssh/githubEnterprise_key2
+
+# GitHub.com - Private Repo, Account Key
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github_key
+```
+
+This approach works for both SSH account keys and deployment keys.  For the example above, the `Package.swift` file needs to be modified to contain the following:
+
+```
+dependencies: [
+     ...
+    .Package(url: "git@enterprise1:Org1/repo1.git", majorVersion: 1, minor: 0),
+    .Package(url: "git@enterprise2:Org1/repo2.git", majorVersion: 1, minor: 0),
+    .Package(url: "git@github.com:Org/repo3.git", majorVersion: 0, minor: 0),
+    ...
+  ]
+```
+
 ### Additional compiler flags
 
 To specify additional compiler flags for the execution of the `swift build` command, you can include a `.swift-build-options-linux` file. For example, in order to leverage the system package `libmysqlclient-dev` in a Swift application, you'd need an additional compiler flag:
