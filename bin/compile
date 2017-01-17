@@ -263,3 +263,8 @@ done
 PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
 set-env PATH '$HOME/.swift-bin:$PATH'
 set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LD_LIBRARY_PATH'
+
+# ----------------------------------------------------------------------------- #
+# Copy utils scripts to BUILD_DIR                                               #
+# ----------------------------------------------------------------------------- #
+cp $BP_DIR/utils/setup-ssh-sesssion.sh $BUILD_DIR
