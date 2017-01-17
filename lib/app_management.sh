@@ -51,14 +51,25 @@ function copyLLDBServer() {
   find $CACHE_DIR/$SWIFT_NAME_VERSION -regex ".*/lldb-[0-9][0-9.]*"  -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin/lldb \;
 }
 
-function downloadPython() {
-  status "Getting Python"
-  local pkgs=('libpython2.7')
-  download_packages "${pkgs[@]}"
+# function downloadPython() {
+#   status "Getting Python"
+#   local pkgs=('libpython2.7')
+#   download_packages "${pkgs[@]}"
+# }
+
+# function removePythonDEBs() {
+#   find $APT_CACHE_DIR/archives -name "*python*.deb" -type f -delete
+# }
+
+function copyDebugDEBs() {
+  status "Copying deb dependencies for debugging..."
+  cp $BP_DIR/binary-debug-dependencies/*.deb $APT_CACHE_DIR/archives
 }
 
-function removePythonDEBs() {
-  find $APT_CACHE_DIR/archives -name "*python*.deb" -type f -delete
+function removeDebugDEBs() {
+  for DEB in $(ls -1 $BP_DIR/binary-debug-dependencies/*.deb); do
+    rm $APT_CACHE_DIR/archives/$(basename $DEB)
+  done
 }
 
 function installAppManagement() {
@@ -72,7 +83,7 @@ function installAppManagement() {
     status "WARNING: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
-    installAgent && updateStartCommands && copyLLDBServer && downloadPython
+    installAgent && updateStartCommands && copyLLDBServer && copyDebugDEBs
   fi
 }
 
@@ -83,7 +94,7 @@ install_app_management() {
     installAppManagement
     status "Finished installing App Management (debug)"
   else
-    removePythonDEBs
+    removeDebugDEBs
     status "Skipping installation of App Management (debug)"
   fi
 }
