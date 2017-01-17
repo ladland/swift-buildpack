@@ -149,7 +149,8 @@ if [ -f $BUILD_DIR/.ssh/config ]; then
   # Add hosts to known_hosts file
   grep HostName ~/.ssh/config | while read line
   do
-    $(ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts) &> /dev/null
+    SSHKey=$(ssh-keyscan -t rsa ${line//HostName } &> /dev/null)
+    echo $SSHKey >> ~/.ssh/known_hosts
   done
 
 else
