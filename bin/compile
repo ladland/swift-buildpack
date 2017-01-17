@@ -150,6 +150,7 @@ if [ -f $BUILD_DIR/.ssh/config ]; then
   grep HostName ~/.ssh/config | while read line
   do
     : $(ssh-keyscan -t rsa ${line//HostName } >> ~/.ssh/known_hosts)
+    echo "loop"
   done
 
 else
