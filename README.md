@@ -255,7 +255,32 @@ libmysqlclient-dev
 
 ### Installing closed source dependencies
 
-For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh` folder in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys, like the one shown below:
+For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh` folder in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys. The example below shows the `config` and `Package.swift` files, respectively, which use the same SSH key to access private and public repositories in enterprise and standard GitHub accounts:
+
+```shell
+# GitHub.com - Private Repo, Account Key
+Host github.ibm.com
+    HostName github.ibm.com
+    User git
+    IdentityFile ~/.ssh/ssh_key
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/ssh_key
+```
+
+```swift
+dependencies: [
+     ...
+    .Package(url: "git@github.ibm.com:Org1/repo1.git", majorVersion: 1, minor: 0),
+    .Package(url: "git@github.ibm.com:Org1/repo2.git", majorVersion: 1, minor: 0),
+    .Package(url: "git@github.com:Org/repo3.git", majorVersion: 0, minor: 0),
+    ...
+  ]
+```
+
+This approach works for both SSH account keys and deployment keys.  For the example below, three keys are used - two deploymenr keys for the enterprise GitHub, and one account key for the standard one.
 
 ```shell
 # GitHub Enterprise - repo1 deployment key
@@ -276,8 +301,6 @@ Host github.com
     User git
     IdentityFile ~/.ssh/github_key
 ```
-
-This approach works for both SSH account keys and deployment keys.  For the example above, the `Package.swift` file needs to be modified to contain the following:
 
 ```swift
 dependencies: [
