@@ -280,7 +280,7 @@ dependencies: [
   ]
 ```
 
-This approach works for both SSH account keys and deployment keys.  For the example below, three keys are used - two deploymenr keys for the enterprise GitHub, and one account key for the standard one.
+This approach works for both SSH account keys and deployment keys.  For the example below, three keys are used - two deployment keys for the enterprise GitHub, and one account key for the standard one.
 
 ```shell
 # GitHub Enterprise - repo1 deployment key
