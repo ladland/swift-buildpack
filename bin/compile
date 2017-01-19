@@ -147,7 +147,7 @@ if [ -d $BUILD_DIR/.ssh ]; then
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
   # Add hosts to known_hosts file
-  if [ -d $BUILD_DIR/.ssh/config ]; then
+  if [ -f $BUILD_DIR/.ssh/config ]; then
     status ".ssh/config file found."
     grep HostName ~/.ssh/config | while read line
     do
