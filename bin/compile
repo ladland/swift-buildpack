@@ -140,6 +140,9 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 # Verify .ssh directory & configure known_hosts for SSH                         #
 # ----------------------------------------------------------------------------- #
+status "HELLLO"
+ls -la $BUILD_DIR
+
 if [ -d $BUILD_DIR/.ssh ]; then
   status ".ssh directory found."
   mkdir -p ~/.ssh
