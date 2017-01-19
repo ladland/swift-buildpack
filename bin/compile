@@ -140,24 +140,18 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # ----------------------------------------------------------------------------- #
 # Verify .ssh directory & configure known_hosts for SSH                         #
 # ----------------------------------------------------------------------------- #
-status "HELLLO"
-ls -la $BUILD_DIR
-
-if [ -d $BUILD_DIR/.ssh ]; then
+if [ -f $BUILD_DIR/.ssh/config ]; then
   status ".ssh directory found."
   mkdir -p ~/.ssh
   touch ~/.ssh/known_hosts
   cp $BUILD_DIR/.ssh/* ~/.ssh
 
   # Add hosts to known_hosts file
-  if [ -f $BUILD_DIR/.ssh/config ]; then
-    status ".ssh/config file found."
-    grep HostName ~/.ssh/config | while read line
-    do
-      SSHKey=$(ssh-keyscan -t rsa ${line//HostName } 2> /dev/null)
-      echo $SSHKey >> ~/.ssh/known_hosts
-    done
-  fi
+  grep HostName ~/.ssh/config | while read line
+  do
+    SSHKey=$(ssh-keyscan -t rsa ${line//HostName } 2> /dev/null)
+    echo $SSHKey >> ~/.ssh/known_hosts
+  done
 
 else
   status "No .ssh directory found."
