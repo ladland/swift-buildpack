@@ -141,7 +141,7 @@ export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 # Verify .ssh directory & configure known_hosts for SSH                         #
 # ----------------------------------------------------------------------------- #
 if [ -f $BUILD_DIR/.ssh/config ]; then
-  status ".ssh directory found."
+  status ".ssh directory and config file found."
   mkdir -p ~/.ssh
   touch ~/.ssh/known_hosts
   cp $BUILD_DIR/.ssh/* ~/.ssh
@@ -154,7 +154,7 @@ if [ -f $BUILD_DIR/.ssh/config ]; then
   done
 
 else
-  status "No .ssh directory found."
+  status ".ssh directory and config file not found."
 fi
 
 # ----------------------------------------------------------------------------- #
