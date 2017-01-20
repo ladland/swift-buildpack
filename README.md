@@ -272,6 +272,8 @@ Host github.com
     IdentityFile ~/.ssh/ssh_key
 ```
 
+You should use the `git` protocol in your `Package.swift` for those dependencies that are private or stored in an enterprise solution (e.g. GitHub Enterprise) as shown below. If you use the `https` protocol instead, then the buildpack will not be able to clone those dependencies.
+
 ```shell
 $ cat Package.swift
 ...
