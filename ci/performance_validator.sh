@@ -30,7 +30,7 @@ push_application () {
 	if [ "$DELETE_FLAG" = true ]; then
 		echo "Executing cf push tests..."
 		echo "Clearing out any previous instances of: $APPLICATION_DIR"
-		cf delete $APPLICATION_DIR -f
+		cf delete $APPLICATION_DIR -r -f
 	else
 		echo "Executing cf re-push tests..."
 	fi
@@ -44,7 +44,7 @@ push_application () {
 		ELAPSED_TIME=$(($SECONDS - $START_TIME))
 
 		if [ "$DELETE_FLAG" = true ]; then
-			cf delete $APPLICATION_DIR -f
+			cf delete $APPLICATION_DIR -r -f
 		fi
 
 		echo "$APPLICATION_DIR took $ELAPSED_TIME seconds."
