@@ -74,6 +74,23 @@ function removeDebugDEBs() {
   done
 }
 
+function generateAppMgmtInfo() {
+  local CONTAINER="garden"
+  local SSH_ENABLED="false"
+  local PROXY_SUPPORTED='["v1", "v2"]'
+
+  # Generate app management info file. proxy_enabled is set during startup.
+cat > $BUILD_DIR/.app-management/app_mgmt_info.json << EOL
+{
+  "container": "$CONTAINER",
+  "ssh_enabled": $SSH_ENABLED,
+  "proxy_enabled": false,
+  "proxy_supported_version": $PROXY_SUPPORTED
+}
+EOL
+
+}
+
 function installAppManagement() {
   # Find boot script file
   start_cmd=$($BP_DIR/lib/find_start_cmd.rb $BUILD_DIR)
@@ -85,7 +102,7 @@ function installAppManagement() {
     status "WARNING: To install App Management utilities, specify a start command for your Swift application in a 'Procfile'."
   else
     # Install development mode utilities
-    installAgent && updateStartCommands && copyLLDBServer && copyDebugDEBs
+    installAgent && updateStartCommands && copyLLDBServer && copyDebugDEBs && generateAppMgmtInfo
   fi
 }
 
