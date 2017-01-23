@@ -28,6 +28,8 @@ function installAgent() {
   cp $BP_DIR/app_management/initial_startup.rb $BUILD_DIR/.app-management
   cp $BP_DIR/app_management/env.json $BUILD_DIR/.app-management
 
+  unzip $BP_DIR/app_management/proxy-agent/proxy-agent -d $BUILD_DIR/.app-management/bin
+
   chmod +x $BUILD_DIR/.app-management/utils/*
   chmod +x $BUILD_DIR/.app-management/scripts/*
   chmod -R +x $BUILD_DIR/.app-management/handlers/
