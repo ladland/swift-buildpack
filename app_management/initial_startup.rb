@@ -40,8 +40,8 @@ def start_runtime(app_dir)
 end
 
 def start_proxy(app_dir)
-  raise 'start_proxy is not implemented yet!'
-  #exec('.app-management/bin/proxyAgent', chdir: app_dir)
+  Utils::SimpleLogger.info("Starting proxy agent")
+  exec('.app-management/bin/proxyAgent', chdir: app_dir)
 end
 
 def run(app_dir, handlers, background)

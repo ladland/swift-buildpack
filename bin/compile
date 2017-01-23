@@ -36,6 +36,9 @@ PACKAGES_DIR="Packages"
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
+# Apply Bluemix-specific environment configuration profile
+$BP_DIR/lib/apply_env_profile.rb $BUILD_DIR
+
 source $BP_DIR/compile-extensions/lib/common
 # Check environment support
 $BP_DIR/compile-extensions/bin/check_stack_support
