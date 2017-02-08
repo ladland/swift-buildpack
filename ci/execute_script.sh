@@ -17,14 +17,6 @@
 
 set -ev
 
-KITURA_STARTER_PUSH_TIME=$1
-TIMES_TO_REPEAT_TO_SUCCESS=$2
-KITURA_STARTER_REPUSH_TIME=$3
-SWIFT_HELLOWORLD_PUSH_TIME=$4
-SWIFT_HELLOWORLD_REPUSH_TIME=$5
-
-
-
 ./ci/performance_validator.sh Kitura-Starter $KITURA_STARTER_PUSH_TIME $TIMES_TO_REPEAT_TO_SUCCESS $KITURA_STARTER_REPUSH_TIME
 rm -rf Kitura-Starter
 ./ci/performance_validator.sh swift-helloworld $SWIFT_HELLOWORLD_PUSH_TIME $TIMES_TO_REPEAT_TO_SUCCESS $SWIFT_HELLOWORLD_REPUSH_TIME
@@ -35,5 +27,3 @@ sed -i 's/^ *dependencies:.*/dependencies: [\.Package(url: "git@github.ibm.com\:
 rm -rf swift-helloworld
 # If all above steps succeeded, then create Git tags
 ./ci/create_git_tag.sh
-
-exit $?
