@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##
-# Copyright IBM Corporation 2016
+# Copyright IBM Corporation 2016,2017
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,19 +29,25 @@ fi
 # Global variables
 BUILD_DIR=$1
 CACHE_DIR=$2
-compile_buildpack_dir=$(cd $(dirname $0); cd ..; pwd)
-compile_buildpack_bin=$compile_buildpack_dir/bin
-BUILDPACK_PATH=$compile_buildpack_dir source $compile_buildpack_dir/compile-extensions/lib/common
+BP_DIR=$(cd $(dirname $0); cd ..; pwd)
+compile_buildpack_bin=$BP_DIR/bin
+BUILDPACK_PATH=$BP_DIR
 PACKAGES_DIR="Packages"
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
+# Apply Bluemix-specific environment configuration profile
+$BP_DIR/lib/apply_env_profile.rb $BUILD_DIR
+
+source $BP_DIR/compile-extensions/lib/common
 # Check environment support
-$compile_buildpack_dir/compile-extensions/bin/check_stack_support
+$BP_DIR/compile-extensions/bin/check_stack_support
 # Load convenience functions like status(), echo(), and indent()
-source $compile_buildpack_dir/lib/common.sh
+source $BP_DIR/lib/common.sh
 # Load caching functions
-source ${compile_buildpack_dir}/lib/cache.sh
+source ${BP_DIR}/lib/cache.sh
+# Load app management extension
+source ${BP_DIR}/lib/app_management.sh
 
 # Log default Swift version
 status "Default supported Swift version is $DEFAULT_SWIFT_VERSION"
@@ -49,6 +55,12 @@ status "Default supported Swift version is $DEFAULT_SWIFT_VERSION"
 # Remove .build and Packages folders (in case they were pushed)
 rm -rf $BUILD_DIR/.build
 rm -rf $BUILD_DIR/Packages
+
+# ----------------------------------------------------------------------------- #
+# Create libraries and binnaries folders for droplet                            #
+# ----------------------------------------------------------------------------- #
+mkdir -p $BUILD_DIR/.swift-lib
+mkdir -p $BUILD_DIR/.swift-bin
 
 # ----------------------------------------------------------------------------- #
 # Configuration for apt-get package installs                                    #
@@ -63,11 +75,11 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p $BUILD_DIR/.apt
 
 # ----------------------------------------------------------------------------- #
-# Write profile script and set additional environment variables                 #
+# Write profile script (for apt) and set additional environment variables       #
 # ----------------------------------------------------------------------------- #
 status "Writing profile script..."
 mkdir -p $BUILD_DIR/.profile.d
-cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
+cat <<EOF >$BUILD_DIR/.profile.d/apt.sh
 export PATH="\$HOME/.apt/usr/bin:\$PATH"
 export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LD_LIBRARY_PATH"
 export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$LIBRARY_PATH"
@@ -85,12 +97,11 @@ export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
 export PKG_CONFIG_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu/pkgconfig:$BUILD_DIR/.apt/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-
 # ----------------------------------------------------------------------------- #
 # Copy pre-cached system level dependencies for Kitura                          #
 # ----------------------------------------------------------------------------- #
 status "Copying deb files to installation folder..."
-cp $compile_buildpack_dir/binary-dependencies/*.deb $APT_CACHE_DIR/archives
+cp $BP_DIR/binary-dependencies/*.deb $APT_CACHE_DIR/archives
 
 # ----------------------------------------------------------------------------- #
 # Download system level dependencies for Kitura                                 #
@@ -138,6 +149,26 @@ CLANG_PATH=$CACHE_DIR/$(echo $CLANG_NAME_VERSION/clang*)
 export PATH="$SWIFT_PATH/usr/bin:$CLANG_PATH/bin:$PATH"
 
 # ----------------------------------------------------------------------------- #
+# Verify .ssh directory & configure known_hosts for SSH                         #
+# ----------------------------------------------------------------------------- #
+if [ -f $BUILD_DIR/.ssh/config ]; then
+  status ".ssh directory and config file found."
+  mkdir -p ~/.ssh
+  touch ~/.ssh/known_hosts
+  cp $BUILD_DIR/.ssh/* ~/.ssh
+
+  # Add hosts to known_hosts file
+  grep HostName ~/.ssh/config | while read line
+  do
+    SSHKey=$(ssh-keyscan -t rsa ${line//HostName } 2> /dev/null)
+    echo $SSHKey >> ~/.ssh/known_hosts
+  done
+
+else
+  status ".ssh directory and config file not found."
+fi
+
+# ----------------------------------------------------------------------------- #
 # Restore Packages folder based on current state                                #
 # ----------------------------------------------------------------------------- #
 restore_cache() {
@@ -166,6 +197,11 @@ else
 fi
 
 # ----------------------------------------------------------------------------- #
+# Install app management - see lib/bluemix_ext.sh                               #
+# ----------------------------------------------------------------------------- #
+install_app_management
+
+# ----------------------------------------------------------------------------- #
 # Install any downloaded system level packages (DEB files)                      #
 # ----------------------------------------------------------------------------- #
 status "Installing system level dependencies..."
@@ -183,20 +219,32 @@ else
   SWIFT_BUILD_OPTIONS=""
 fi
 
-swift build --configuration release $SWIFT_BUILD_OPTIONS -Xcc -I$BUILD_DIR/.apt/usr/include -Xlinker -L$BUILD_DIR/.apt/usr/lib -Xlinker -L$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu -Xlinker -rpath=$BUILD_DIR/.apt/usr/lib | indent
+if [[ "$INSTALL_BLUEMIX_APP_MGMT" == "true" ]] && [[ $BLUEMIX_APP_MGMT_ENABLE == *"debug"* ]]; then
+  BUILD_CONFIGURATION="debug"
+else
+  BUILD_CONFIGURATION="release"
+fi
+status "Build config: $BUILD_CONFIGURATION"
+
+swift build --configuration $BUILD_CONFIGURATION $SWIFT_BUILD_OPTIONS -Xcc -I$BUILD_DIR/.apt/usr/include -Xlinker -L$BUILD_DIR/.apt/usr/lib -Xlinker -L$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu -Xlinker -rpath=$BUILD_DIR/.apt/usr/lib | indent
 
 # These should be statically linked, seems a Swift bug.
 status "Copying dynamic libraries"
-mkdir -p $BUILD_DIR/.swift-lib
 cp $SWIFT_PATH/usr/lib/swift/linux/*.so $BUILD_DIR/.swift-lib
-cp $BUILD_DIR/.build/release/*.so $BUILD_DIR/.swift-lib 2>/dev/null || true
+cp $BUILD_DIR/.build/$BUILD_CONFIGURATION/*.so $BUILD_DIR/.swift-lib 2>/dev/null || true
+# Copying additional dynamic libraries
+cp $SWIFT_PATH/usr/lib/*.so $BUILD_DIR/.swift-lib
+cp $SWIFT_PATH/usr/lib/*.so.* $BUILD_DIR/.swift-lib
 
 status "Copying binaries to 'bin'"
-mkdir -p $BUILD_DIR/.swift-bin
-find $BUILD_DIR/.build/release -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin \;
+find $BUILD_DIR/.build/$BUILD_CONFIGURATION -type f -perm /a+x -exec cp {} $BUILD_DIR/.swift-bin \;
 
 status "Cleaning up build files"
 rm -rf $BUILD_DIR/.build
+
+# Remove /.ssh folders
+rm -rf $BUILD_DIR/.ssh
+rm -rf ~/.ssh
 
 # ----------------------------------------------------------------------------- #
 # Copy Packages folder from BUILD_DIR to CACHE_DIR                              #
@@ -222,31 +270,28 @@ cache_build
 # directories results in a negative performance hit.                            #
 # ----------------------------------------------------------------------------- #
 status "Optimizing contents of cache folder..."
+# Remove unpacked tars (~1 GB of data)
 rm -rf $CACHE_DIR/$SWIFT_NAME_VERSION
 rm -rf $CACHE_DIR/$CLANG_NAME_VERSION
 rm -rf $CACHE_DIR/"$SWIFT_NAME_VERSION.tar.gz"
 rm -rf $CACHE_DIR/"$CLANG_NAME_VERSION.tar.xz"
-for DEB in $(ls -1 $compile_buildpack_dir/binary-dependencies/*.deb); do
+for DEB in $(ls -1 $BP_DIR/binary-dependencies/*.deb); do
   rm $APT_CACHE_DIR/archives/$(basename $DEB)
 done
+# Remove items already cached in the buildpack package
+#for i in "${CACHED_ITEMS[@]}"
+#do
+#  rm -rf $i
+#done
 
 # ----------------------------------------------------------------------------- #
 # Set up application environment                                                #
 # ----------------------------------------------------------------------------- #
 PROFILE_PATH="$BUILD_DIR/.profile.d/swift.sh"
 set-env PATH '$HOME/.swift-bin:$PATH'
-set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LIBRARY_PATH'
+set-env LD_LIBRARY_PATH '$HOME/.swift-lib:$LD_LIBRARY_PATH'
 
 # ----------------------------------------------------------------------------- #
-# Backup code                                                                   #
+# Copy utils scripts to BUILD_DIR                                               #
 # ----------------------------------------------------------------------------- #
-# If leveraging CACHE_DIR for tar files, then uncomment this code
-#status "Optimizing contents of cache folder"
-# Remove unpacked tars (~1 GB of data)
-#rm -rf $CACHE_DIR/$SWIFT_NAME_VERSION
-#rm -rf $CACHE_DIR/$CLANG_NAME_VERSION
-# Remove items already cached in the buildpack package
-#for i in "${CACHED_ITEMS[@]}"
-#do
-#  rm -rf $i
-#done
+cp $BP_DIR/utils/setup-ssh-sesssion.sh $BUILD_DIR

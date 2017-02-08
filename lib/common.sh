@@ -83,7 +83,7 @@ download_dependency() {
   if [[ ! -e "$CACHE_DIR/$dependency_filename" ]]; then
     status "Getting $dependency_name"
     # Place dependency tar file in CACHE_DIR
-    in_cache=$($compile_buildpack_dir/compile-extensions/bin/download_dependency $dependency_filename $CACHE_DIR $default_dependency_version)
+    in_cache=$($BP_DIR/compile-extensions/bin/download_dependency $dependency_filename $CACHE_DIR $default_dependency_version)
     if [[ $in_cache = "true" ]]; then
       echo "Cached $dependency_name" | indent
       #CACHED_ITEMS+=($dependency_filename)
@@ -108,7 +108,7 @@ download_packages() {
   local packages=("$@")
   for package in "${packages[@]}"; do
     # Check if CACHE_DIR already contains DEB file for package
-    if [ -f $APT_CACHE_DIR/archives/$package*.deb ]; then
+    if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
       status "$package was already downloaded."
       # Remove element from array if DEB file already downloaded
       unset 'packages[${package}]'
@@ -124,7 +124,7 @@ download_packages() {
     packages="$(join_by_whitespace ${packages[@]})"
     status "Fetching .debs for: $packages"
     if [ "$APT_PCKGS_LIST_UPDATED" = false ] ; then
-      apt-get $APT_OPTIONS update
+      apt-get $APT_OPTIONS update | indent
       APT_PCKGS_LIST_UPDATED=true
     fi
     apt-get $APT_OPTIONS -y --force-yes -d install --reinstall $packages | indent
