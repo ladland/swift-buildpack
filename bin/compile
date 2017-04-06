@@ -279,7 +279,7 @@ rm -rf $CACHE_DIR/"$SWIFT_NAME_VERSION.tar.gz"
 rm -rf $CACHE_DIR/"$CLANG_NAME_VERSION.tar.xz"
 deb_files=($BP_DIR/binary-dependencies/*.deb)
 if [ -f "${deb_files[0]}" ]; then
-  for DEB in deb_files; do
+  for DEB in ${deb_files[@]}; do
     rm $APT_CACHE_DIR/archives/$(basename $DEB)
   done
 fi

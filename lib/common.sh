@@ -144,7 +144,7 @@ download_packages() {
 install_packages() {
   deb_files=($APT_CACHE_DIR/archives/*.deb)
   if [ -f "${deb_files[0]}" ]; then
-    for DEB in deb_files; do
+    for DEB in ${deb_files[@]}; do
       status "Installing $(basename $DEB)"
       dpkg -x $DEB $BUILD_DIR/.apt/
     done
