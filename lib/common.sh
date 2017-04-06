@@ -105,6 +105,9 @@ download_dependency() {
 }
 
 download_packages() {
+  # Using unset to remove elements from an array did not always yield
+  # the expected outcome... for instance, removing "python2.7-doc"
+  # resulted in the following error: invalid arithmetic operator (error token is ".7-doc")
   local packages=("$@")
   local pkgs=()
   for package in "${packages[@]}"; do
