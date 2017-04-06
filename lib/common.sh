@@ -106,26 +106,24 @@ download_dependency() {
 
 download_packages() {
   local packages=("$@")
+  local pkgs=()
   for package in "${packages[@]}"; do
     # Check if package is installed as part of the root fs
     if dpkg -l "$package" >/dev/null 2>&1; then
       status "$package is already installed."
-      # Remove element from array
-      unset 'packages[${package}]'
-      packages=("${packages[@]}")
       continue
-    fi
-
-    # Check if CACHE_DIR already contains DEB file for package
-    if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
-      status "$package was already downloaded."
-      # Remove element from array if DEB file already downloaded
-      unset 'packages[${package}]'
-      packages=("${packages[@]}")
-      continue
+    else
+      # Check if CACHE_DIR already contains DEB file for package
+      if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
+        status "$package was already downloaded."
+        continue
+      fi
+      pkgs+=($package)
     fi
   done
 
+  # Update packages array contents
+  packages=("${pkgs[@]}")
   if [ ${#packages[@]} -eq 0 ]; then
     status "No additional packages to download."
   else
