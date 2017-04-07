@@ -342,7 +342,7 @@ $ cat .swift-build-options-linux
 If you need to specify the path to header files for a system package installed by the buildpack, you can use the following:
 
 ```shell
--Xcc -I$BUILD_DIR/.apt/<path to header files>
+-Xcc -I$BUILD_DIR/.apt/usr/include/<path to header files>
 ```
 
 ### libdispatch
