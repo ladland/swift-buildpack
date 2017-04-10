@@ -179,7 +179,7 @@ The buildpack will detect your app as Swift if it has a `Package.swift` file in 
 
 ### Version installed on Bluemix
 
-The latest version of the IBM Bluemix buildpack for Swift on Bluemix is [v2.0.4](https://github.com/IBM-Swift/swift-buildpack/releases/tag/2.0.4).
+The latest version of the IBM Bluemix buildpack for Swift on Bluemix is [v2.0.5](https://github.com/IBM-Swift/swift-buildpack/releases/tag/2.0.5).
 
 Please note that it is possible that the latest buildpack code contained in this repo hasn't yet been installed on Bluemix. If that happens to be the case and you'd like to leverage the latest buildpack code, you can do so by adding the `-b https://github.com/IBM-Swift/swift-buildpack` parameter to the `cf push` command, as shown below:
 
@@ -221,7 +221,7 @@ command: <executable_name>
 
 ### What is the latest version of Swift supported?
 
-The latest version of Swift supported by this buildpack is ```3.0.2```.
+The latest version of Swift supported by this buildpack is ```3.1```.
 
 ### Specify a Swift version
 
@@ -229,13 +229,13 @@ You specify the version of Swift for your application using a `.swift-version` f
 
 ```shell
 $ cat .swift-version
-3.0.2
+3.1
 ```
 
 Please note that the swift_buildpack installed on Bluemix **caches** the following versions of the Swift binaries:
 
+- `3.1`
 - `3.0.2`
-- `3.0.1`
 
 If you'd like to use a different version of Swift [that is not cached] on Bluemix, you can specify it in the `.swift-version` file.  Please be aware that using a Swift version that is not cached increases the provisioning time of your app on Bluemix.
 
@@ -246,11 +246,11 @@ Since there are frequent Swift language changes, it's advised that you pin your 
 ### Installing additional system level dependencies
 Many Swift applications will not require the installation of any additional libraries. It's very common for today’s applications to have dependencies only on services that provide REST interfaces to interact with them (e.g., Cloudant, AlchemyAPI, Personality Insights, etc.).
 
-However, since dependencies vary from application to application, there could be cases when additional system packages may be required to compile and/or execute a Swift application. To address this need, the IBM Bluemix buildpack for Swift supports the installation of Ubuntu trusty packages using the `apt-get` utility. You can specify the Ubuntu packages that the should be installed by including an `Aptfile` in the root directory of your Swift application. Each line in the Aptfile should contain a valid Ubuntu package name. For instance, if your application has a dependency on the `libmysqlclient-dev` package, then your Aptfile should look like this:
+However, since dependencies vary from application to application, there could be cases when additional system packages may be required to compile and/or execute a Swift application. To address this need, the IBM Bluemix buildpack for Swift supports the installation of Ubuntu trusty packages using the `apt-get` utility. You can specify the Ubuntu packages that the should be installed by including an `Aptfile` in the root directory of your Swift application. Each line in the Aptfile should contain a valid Ubuntu package name. For instance, if your application has a dependency on the `jsonbot` package, then your Aptfile should look like this:
 
 ```shell
 $ cat Aptfile
-libmysqlclient-dev
+jsonbot
 ```
 
 ### Installing closed source dependencies
@@ -332,21 +332,18 @@ $ cat .swift-build-options-linux
 -Xswiftc -DNOJSON
 ```
 
-Here's another example of the contents that can be added to the `.swift-build-options-linux` file:
+When leveraging the PostgreSQL system library `libpq-dev`, the following contents should be added to the `.swift-build-options-linux` file:
 
 ```shell
 $ cat .swift-build-options-linux
--Xcc -I$BUILD_DIR/.apt/usr/include/postgresql
+-Xcc -I/usr/include/postgresql
 ```
 
-The compiler flag shown in the above example is required when leveraging the PostgreSQL system library `libpq-dev`.
+If you need to specify the path to header files for a system package installed by the buildpack, you can use the following:
 
-### System level libraries
-
-This buildpack installs the following Ubuntu 14.04 system libraries:
-
-- libicu-dev
-- libcurl4-openssl-dev
+```shell
+-Xcc -I$BUILD_DIR/.apt/usr/include/<path to header files>
+```
 
 ### libdispatch
 
@@ -354,7 +351,7 @@ Previous versions of this buildpack provided the [libdispatch](https://github.co
 
 ### Caching of the Packages folder
 
-You should know the Bluemix buildpack for Swift will cache the contents of the `Packages` folder to speed up the provisioning of your application the next time you execute the `cf push` command. If you'd prefer not to use this caching mechanism, you can disable it by executing the following command:
+For Swift versions prior to Swift 3.1, the Bluemix buildpack for Swift will cache the contents of the `Packages` folder to speed up the provisioning of your application the next time you execute the `cf push` command. If you'd prefer not to use this caching mechanism, you can disable it by executing the following command:
 
 ```shell
 cf set-env <app_name> SWIFT_PACKAGES_CACHE false
@@ -390,15 +387,15 @@ Admin tasks
 To install this buildpack:
 
 ```shell
-wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.4/buildpack_swift_v2.0.4-20170125-2344.zip
-cf create-buildpack swift_buildpack buildpack_swift_v2.0.4-20170125-2344.zip <position>
+wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.5/buildpack_swift_v2.0.5-20170406-2317.zip
+cf create-buildpack swift_buildpack buildpack_swift_v2.0.5-20170406-2317.zip <position>
 ```
 
 And to update it:
 
 ```shell
-wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.4/buildpack_swift_v2.0.4-20170125-2344.zip
-cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.4-20170125-2344.zip
+wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.5/buildpack_swift_v2.0.5-20170406-2317.zip
+cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.5-20170406-2317.zip
 ```
 
 For more details on installing buildpacks, see [Adding buildpacks to Cloud Foundry](https://docs.cloudfoundry.org/adminguide/buildpacks.html).

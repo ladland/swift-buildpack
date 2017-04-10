@@ -15,7 +15,7 @@
 ##
 
 # Global/common vars
-DEFAULT_SWIFT_VERSION=3.0.2
+DEFAULT_SWIFT_VERSION=3.1
 CLANG_VERSION=3.8.0
 
 error() {
@@ -105,18 +105,28 @@ download_dependency() {
 }
 
 download_packages() {
+  # Using unset to remove elements from an array did not always yield
+  # the expected outcome... for instance, removing "python2.7-doc"
+  # resulted in the following error: invalid arithmetic operator (error token is ".7-doc")
   local packages=("$@")
+  local pkgs=()
   for package in "${packages[@]}"; do
-    # Check if CACHE_DIR already contains DEB file for package
-    if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
-      status "$package was already downloaded."
-      # Remove element from array if DEB file already downloaded
-      unset 'packages[${package}]'
-      packages=("${packages[@]}")
+    # Check if package is installed as part of the root fs
+    if dpkg -l "$package" >/dev/null 2>&1; then
+      status "$package is already installed."
       continue
+    else
+      # Check if CACHE_DIR already contains DEB file for package
+      if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
+        status "$package was already downloaded."
+        continue
+      fi
+      pkgs+=($package)
     fi
   done
 
+  # Update packages array contents
+  packages=("${pkgs[@]}")
   if [ ${#packages[@]} -eq 0 ]; then
     status "No additional packages to download."
   else
@@ -133,10 +143,13 @@ download_packages() {
 }
 
 install_packages() {
-  for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
-    status "Installing $(basename $DEB)"
-    dpkg -x $DEB $BUILD_DIR/.apt/
-  done
+  deb_files=($APT_CACHE_DIR/archives/*.deb)
+  if [ -f "${deb_files[0]}" ]; then
+    for DEB in ${deb_files[@]}; do
+      status "Installing $(basename $DEB)"
+      dpkg -x $DEB $BUILD_DIR/.apt/
+    done
+  fi
 }
 
 get_swift_version() {
