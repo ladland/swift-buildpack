@@ -70,8 +70,11 @@ passed_repush=$?
 cd ..
 
 # Verify 200 from application route status code
-url=$(cf app Kitura-Starter | grep urls:)
-status=$(curl -s -o /dev/null -w '%{http_code}' ${url#urls: })
+cf app $APPLICATION_DIR
+url=$(cf app $APPLICATION_DIR | grep routes:)
+echo "Obtained $APPLICATION_DIR route assignment: $url"
+status=$(curl -s -o /dev/null -w '%{http_code}' ${url#routes: })
+echo "cURL $APPLICATION_DIR route status:  $status"
 [ "$status" = 200 ] ; url_success=$?
 
 ! (( $passed | $passed_repush | $url_success ));
