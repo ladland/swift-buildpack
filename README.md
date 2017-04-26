@@ -354,14 +354,14 @@ Previous versions of this buildpack provided the [libdispatch](https://github.co
 For Swift versions prior to Swift 3.1, the Bluemix buildpack for Swift will cache the contents of the `Packages` folder to speed up the provisioning of your application the next time you execute the `cf push` command. If you'd prefer not to use this caching mechanism, you can disable it by executing the following command:
 
 ```shell
-cf set-env <app_name> SWIFT_PACKAGES_CACHE false
+cf set-env <app_name> SWIFT_BUILD_DIR_CACHE false
 cf restage <app_name>
 ```
 
 If at some point, you'd like to re-enable caching of the `Packages` folder, you can do so by executing:
 
 ```shell
-cf set-env <app_name> SWIFT_PACKAGES_CACHE true
+cf set-env <app_name> SWIFT_BUILD_DIR_CACHE true
 cf restage <app_name>
 ```
 

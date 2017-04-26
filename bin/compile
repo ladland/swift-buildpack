@@ -261,8 +261,8 @@ cache_build() {
 }
 # Cache packages before removing '.build' directory
 cache_build
-status "Cleaning up build files"
-rm -rf $BUILD_DIR/.build
+#status "Cleaning up build files"
+#rm -rf $BUILD_DIR/.build
 
 # Remove /.ssh folder
 rm -rf ~/.ssh
