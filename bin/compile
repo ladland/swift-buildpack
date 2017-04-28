@@ -32,7 +32,7 @@ CACHE_DIR=$2
 BP_DIR=$(cd $(dirname $0); cd ..; pwd)
 compile_buildpack_bin=$BP_DIR/bin
 BUILDPACK_PATH=$BP_DIR
-PACKAGES_DIR=.build
+SWIFT_BUILD_DIR=.build
 # If leveraging CACHE_DIR for tar files, then we'd need CACHED_ITEMS
 #CACHED_ITEMS=()
 
@@ -178,7 +178,7 @@ restore_cache() {
   local cache_status="$(get_cache_status)"
   if [ "$cache_status" == "valid" ]; then
     status "Loading from cache:"
-    restore_cache_directories "$BUILD_DIR" "$CACHE_DIR" "$PACKAGES_DIR"
+    restore_cache_directories "$BUILD_DIR" "$CACHE_DIR" "$SWIFT_BUILD_DIR"
   else
     status "Skipping cache restore ($cache_status)"
   fi
@@ -255,7 +255,7 @@ cache_build() {
     status "Skipping cache save (disabled by config)"
   else
     status "Saving cache (default):"
-    save_cache_directories "$BUILD_DIR" "$CACHE_DIR" "$PACKAGES_DIR"
+    save_cache_directories "$BUILD_DIR" "$CACHE_DIR" "$SWIFT_BUILD_DIR"
   fi
   save_signatures
 }

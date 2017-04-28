@@ -390,14 +390,14 @@ To install this buildpack:
 
 ```shell
 wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.5/buildpack_swift_v2.0.5-20170406-2317.zip
-bx cf create-buildpack swift_buildpack buildpack_swift_v2.0.5-20170406-2317.zip <position>
+bx cf create-buildpack swift_buildpack buildpack_swift_v2.0.6-20170406-2317.zip <position>
 ```
 
 And to update it:
 
 ```shell
 wget https://github.com/IBM-Swift/swift-buildpack/releases/download/v2.0.5/buildpack_swift_v2.0.5-20170406-2317.zip
-bx cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.5-20170406-2317.zip
+bx cf update-buildpack swift_buildpack -p buildpack_swift_v2.0.6-20170406-2317.zip
 ```
 
 For more details on installing buildpacks, see [Adding buildpacks to Cloud Foundry](https://docs.cloudfoundry.org/adminguide/buildpacks.html).
