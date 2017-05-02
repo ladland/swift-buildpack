@@ -12,6 +12,7 @@ gemfile:
 before_install:
   # Install Cloud Foundry command line
   - set -e
+  - gem install bundler
   - bundle install
   - bundle exec rake
   - wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
