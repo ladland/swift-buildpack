@@ -16,11 +16,10 @@
 ##
 
 # points to /home/vcap/app
-app_dir = File.expand_path('..', File.dirname(__FILE__))
+APP_DIR = File.expand_path('..', File.dirname(__FILE__))
+APP_MGMT_DIR = File.join(APP_DIR, '.app-management')
 
-app_mgmt_dir = File.join(app_dir, '.app-management')
-
-$LOAD_PATH.unshift app_mgmt_dir
+$LOAD_PATH.unshift APP_MGMT_DIR
 
 require 'json'
 require_relative 'utils/handlers'
@@ -70,8 +69,9 @@ def write_json(file, key, value)
   end
 end
 
-def startup_with_handlers
-  handlers_dir = File.join(app_mgmt_dir, 'handlers')
+
+def startup_with_handlers(app_dir)
+  handlers_dir = File.join(APP_MGMT_DIR, 'handlers')
 
   handlers = Utils::Handlers.new(handlers_dir)
 
@@ -92,7 +92,7 @@ def startup_with_handlers
       run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
 
       # Start proxy
-      write_json(File.join(app_mgmt_dir, 'app_mgmt_info.json'), 'proxy_enabled', 'true')
+      write_json(File.join(APP_MGMT_DIR, 'app_mgmt_info.json'), 'proxy_enabled', 'true')
       start_proxy(app_dir)
     end
   else
@@ -106,11 +106,10 @@ end
 
 def startup
   Utils::SimpleLogger.info("App Management handlers: #{handler_list}")
-
   # No handlers are specified. Start the runtime normally.
-  start_runtime(app_dir) if handler_list.nil? || handler_list.empty?
+  start_runtime(APP_DIR) if handler_list.nil? || handler_list.empty?
   # Otherwise, start with handlers
-  startup_with_handlers unless handler_list.nil? || handler_list.empty?
+  startup_with_handlers(APP_DIR) unless handler_list.nil? || handler_list.empty?
 end
 
 # do not execute this block if file is "required" rather than being run directly
