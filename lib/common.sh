@@ -142,44 +142,6 @@ download_packages() {
   fi
 }
 
-download_packages() {
-  # Using unset to remove elements from an array did not always yield
-  # the expected outcome... for instance, removing "python2.7-doc"
-  # resulted in the following error: invalid arithmetic operator (error token is ".7-doc")
-  local packages=("$@")
-  local pkgs=()
-  for package in "${packages[@]}"; do
-    # Check if package is installed as part of the root fs
-    #if dpkg -l "$package" >/dev/null 2>&1; then
-    #  status "$package is already installed."
-    #  continue
-    #else
-      # Check if CACHE_DIR already contains DEB file for package
-    #  if [ -f "$APT_CACHE_DIR/archives/$package*.deb" ]; then
-    #    status "$package was already downloaded."
-    #    continue
-    #  fi
-      pkgs+=($package)
-    fi
-  done
-
-  # Update packages array contents
-  packages=("${pkgs[@]}")
-  if [ ${#packages[@]} -eq 0 ]; then
-    status "No additional repository packages to download."
-  else
-    # Turn string array into a space delimited string
-    packages="$(join_by_whitespace ${packages[@]})"
-    status "Fetching .debs for repository: $packages"
-    #if [ "$APT_PCKGS_LIST_UPDATED" = false ] ; then
-    #  apt-get $APT_OPTIONS update | indent
-    #  APT_PCKGS_LIST_UPDATED=true
-    #fi
-    add-apt-repository $APT_OPTIONS -y --force-yes -d install --reinstall $packages | indent
-    status "Downloaded DEB files from PPA repo..."
-  fi
-}
-
 install_packages() {
   deb_files=($APT_CACHE_DIR/archives/*.deb)
   if [ -f "${deb_files[0]}" ]; then
