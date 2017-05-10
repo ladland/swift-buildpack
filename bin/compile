@@ -116,7 +116,9 @@ fi
 
 #apt-get -qq update
 apt-get $APT_OPTIONS -qq update
-apt-get $APT_OPTIONS install -y software-properties-common
+status "update complete CHRISTIAN"
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall software-properties-common
+status "INSTALL COMPLETE CHRISTIAN"
 add-apt-repository ppa:0k53d-karl-f830m/openssl
 apt-get update
 apt-get install openssl
