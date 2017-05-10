@@ -114,8 +114,8 @@ fi
 #packages=("libicu-dev" "libcurl4-openssl-dev")
 #download_packages "${packages[@]}"
 
-apt-get -qq update
-apt-get install -y software-properties-common
+#apt-get -qq update
+apt-get $APT_OPTIONS install -y software-properties-common
 add-apt-repository ppa:0k53d-karl-f830m/openssl
 apt-get update
 apt-get install openssl
