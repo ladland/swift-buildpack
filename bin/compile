@@ -130,6 +130,21 @@ else
 fi
 
 # ----------------------------------------------------------------------------- #
+# Download any application specific system dependencies specified               #
+# in Aptfile (if present) using apt-get                                         #
+# ----------------------------------------------------------------------------- #
+if [ -f $BUILD_DIR/PPAfile ]; then
+  status "PPAfile found."
+  for PACKAGE in $(cat $BUILD_DIR/PPAfile | sed $'s/\r$//'); do
+    status "Entry found in PPAfile for $PACKAGE."
+    packages=($PACKAGE)
+    download_ppa "${packages[@]}"
+  done
+else
+  status "No Aptfile found."
+fi
+
+# ----------------------------------------------------------------------------- #
 # Install Swift dev tools & clang                                               #
 # ----------------------------------------------------------------------------- #
 # Determine Swift version for the app
