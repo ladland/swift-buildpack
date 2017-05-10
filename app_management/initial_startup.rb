@@ -16,23 +16,18 @@
 ##
 
 # points to /home/vcap/app
-app_dir = File.expand_path('..', File.dirname(__FILE__))
+APP_DIR = File.expand_path('..', File.dirname(__FILE__))
+APP_MGMT_DIR = File.join(APP_DIR, '.app-management')
 
-app_mgmt_dir = File.join(app_dir, '.app-management')
-
-$LOAD_PATH.unshift app_mgmt_dir
+$LOAD_PATH.unshift APP_MGMT_DIR
 
 require 'json'
-require 'utils/handlers'
-require 'utils/simple_logger'
+require_relative 'utils/handlers'
+require_relative 'utils/simple_logger'
 
-def get_handler_list
-  if !ENV['BLUEMIX_APP_MGMT_ENABLE'].nil?
-    handlers = ENV['BLUEMIX_APP_MGMT_ENABLE'].downcase.split('+').map(&:strip)
-  else
-    handlers = nil
-  end
-  return handlers
+def handler_list
+  return nil if ENV['BLUEMIX_APP_MGMT_ENABLE'].nil?
+  ENV['BLUEMIX_APP_MGMT_ENABLE'].downcase.split('+').map(&:strip)
 end
 
 def start_runtime(app_dir)
@@ -40,16 +35,16 @@ def start_runtime(app_dir)
 end
 
 def start_proxy(app_dir)
-  Utils::SimpleLogger.info("Starting proxy agent")
+  Utils::SimpleLogger.info('Starting proxy agent')
   exec('.app-management/bin/proxyAgent', chdir: app_dir)
 end
 
 def run(app_dir, handlers, background)
-  if handlers.length != 0
-    command = handlers.map(&:start_script).join(' ; ')
-    command = "( #{command} ) &" if background
-    system(command.to_s, chdir: app_dir)
-  end
+  return if handlers.empty?
+
+  command = handlers.map(&:start_script).join(' ; ')
+  command = "( #{command} ) &" if background
+  system(command.to_s, chdir: app_dir)
 end
 
 def run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
@@ -74,14 +69,8 @@ def write_json(file, key, value)
   end
 end
 
-handler_list = get_handler_list
-Utils::SimpleLogger.info("App Management handlers: #{handler_list}")
-
-if handler_list.nil? || handler_list.empty?
-  # No handlers are specified. Start the runtime normally.
-  start_runtime(app_dir)
-else
-  handlers_dir = File.join(app_mgmt_dir, 'handlers')
+def startup_with_handlers(app_dir)
+  handlers_dir = File.join(APP_MGMT_DIR, 'handlers')
 
   handlers = Utils::Handlers.new(handlers_dir)
 
@@ -102,7 +91,7 @@ else
       run_handlers(app_dir, handlers, valid_handlers, invalid_handlers)
 
       # Start proxy
-      write_json(File.join(app_mgmt_dir, 'app_mgmt_info.json'), 'proxy_enabled', 'true')
+      write_json(File.join(APP_MGMT_DIR, 'app_mgmt_info.json'), 'proxy_enabled', 'true')
       start_proxy(app_dir)
     end
   else
@@ -113,3 +102,14 @@ else
     start_runtime(app_dir)
   end
 end
+
+def startup
+  Utils::SimpleLogger.info("App Management handlers: #{handler_list}")
+  # No handlers are specified. Start the runtime normally.
+  start_runtime(APP_DIR) if handler_list.nil? || handler_list.empty?
+  # Otherwise, start with handlers
+  startup_with_handlers(APP_DIR) unless handler_list.nil? || handler_list.empty?
+end
+
+# do not execute this block if file is "required" rather than being run directly
+startup if __FILE__ == $PROGRAM_NAME
