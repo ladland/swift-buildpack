@@ -115,9 +115,11 @@ fi
 #download_packages "${packages[@]}"
 
 #apt-get -qq update
-apt-get $APT_OPTIONS -qq update
+#apt-get $APT_OPTIONS -qq update
 status "update complete CHRISTIAN"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall software-properties-common
+#apt-get $APT_OPTIONS -y --force-yes -d install --reinstall software-properties-common
+packages=software-properties-common
+download_packages "${packages[@]}"
 status "INSTALL COMPLETE CHRISTIAN"
 add-apt-repository ppa:0k53d-karl-f830m/openssl
 apt-get update
