@@ -114,16 +114,18 @@ fi
 #packages=("libicu-dev" "libcurl4-openssl-dev")
 #download_packages "${packages[@]}"
 
-#apt-get -qq update
-#apt-get $APT_OPTIONS -qq update
-status "update complete CHRISTIAN"
-#apt-get $APT_OPTIONS -y --force-yes -d install --reinstall software-properties-common
-packages=software-properties-common
-download_packages "${packages[@]}"
-status "INSTALL COMPLETE CHRISTIAN"
+status "testing1 - CHRISTIAN"
+apt-get $APT_OPTIONS update
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall software-properties-common python-software-properties | indent
+status "Downloaded DEB files..."
+for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
+  status "Installing $(basename $DEB)"
+  dpkg -x $DEB $BUILD_DIR/.apt/
+done
 add-apt-repository ppa:0k53d-karl-f830m/openssl
-apt-get update
-apt-get install openssl
+apt-get $APT_OPTIONS update
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall openssl | indent
+status "testing2 - CHRISTIAN"
 
 
 # ----------------------------------------------------------------------------- #
