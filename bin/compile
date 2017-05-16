@@ -122,10 +122,11 @@ for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   status "Installing $(basename $DEB)"
   dpkg -x $DEB $BUILD_DIR/.apt/
 done
+status "testing2 - CHRISTIAN"
 add-apt-repository ppa:0k53d-karl-f830m/openssl
 apt-get $APT_OPTIONS update
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall openssl | indent
-status "testing2 - CHRISTIAN"
+status "testing3 - CHRISTIAN"
 
 
 # ----------------------------------------------------------------------------- #
