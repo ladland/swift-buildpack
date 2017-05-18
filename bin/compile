@@ -116,7 +116,7 @@ fi
 
 status "testing1 - CHRISTIAN"
 apt-get $APT_OPTIONS update
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall python software-properties-common python-software-properties | indent
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall python2.7 software-properties-common python-software-properties | indent
 status "Downloaded DEB files..."
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   status "Installing $(basename $DEB)"
