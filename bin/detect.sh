@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##
-# Copyright IBM Corporation 2017
+# Copyright IBM Corporation 2016
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##
+# bin/detect <build-dir>
 
-`dirname $0`/detect.sh "$@" | tee -a staging_task.log
-exit_status=${PIPESTATUS[0]}
-if [ $exit_status -ne 0 ]; then
-  exit $exit_status
+# Abort if any command fails
+set -e
+
+# Configure directories
+BP_DIR=$(cd $(dirname $0); cd ..; pwd)
+APP_DIR=$1
+
+# Load convenience functions
+source $BP_DIR/lib/common.sh
+
+if [[ -f $APP_DIR/Package.swift ]]; then
+  swift_version="$(get_swift_version)"
+  buildpack_version="$(cat $BP_DIR/VERSION)"
+  echo "IBM Bluemix buildpack for Swift (Swift: $swift_version, buildpack: $buildpack_version)" && exit 0
+else
+  echo "no" && exit 1
 fi
