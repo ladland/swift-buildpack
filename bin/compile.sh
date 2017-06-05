@@ -134,9 +134,9 @@ fi
 # in PPAfile (if present) using apt-get                                         #
 # ----------------------------------------------------------------------------- #
 if [ -f $BUILD_DIR/PPAfile ]; then
-  echo "PPAfile found."
+  status "PPAfile found."
   for PACKAGE in $(cat $BUILD_DIR/PPAfile | sed $'s/\r$//'); do
-    echo "Entry found in PPAfile for $PACKAGE."
+    status "Entry found in PPAfile for $PACKAGE."
     BASE_URL=http://ppa.launchpad.net/${PACKAGE#ppa:}/ubuntu/
     PACKAGE_FILE=${BASE_URL}dists/trusty/main/binary-amd64/Packages.gz
     wget -qO - $PACKAGE_FILE | gunzip -c > /tmp/packagesList
@@ -145,15 +145,16 @@ if [ -f $BUILD_DIR/PPAfile ]; then
 
     #for all filename attributes, download .deb files
     awk '/Package: [^\-]*\n/{ print $0 }' RS="" FS="\n" /tmp/packagesList | grep "Filename:" | while read -r line ; do
-      echo "Installing dependency ${line#Filename: }"
-      wget -q ${BASE_URL}${line#Filename: }
+      status "Installing dependency ${line#Filename: }"
+      wget ${BASE_URL}${line#Filename: }
     done
   done
   dpkg -i *.deb
   apt-get -fyq install
   rm /tmp/packagesList
+  rm *.deb
 else
-  echo "No PPAfile found."
+  status "No PPAfile found."
 fi
 
 # ----------------------------------------------------------------------------- #
