@@ -146,7 +146,7 @@ if [ -f $BUILD_DIR/PPAfile ]; then
     #for all filename attributes, download .deb files
     awk '/Package: [^\-]*\n/{ print $0 }' RS="" FS="\n" /tmp/packagesList | grep "Filename:" | while read -r line ; do
       status "Installing dependency ${line#Filename: }"
-      wget ${BASE_URL}${line#Filename: }
+      wget -qP $APT_CACHE_DIR/archives/  ${BASE_URL}${line#Filename: }
     done
   done
   #dpkg -i *.deb
