@@ -130,6 +130,33 @@ else
 fi
 
 # ----------------------------------------------------------------------------- #
+# Download any application specific system dependencies specified               #
+# in PPAfile (if present) using apt-get                                         #
+# ----------------------------------------------------------------------------- #
+if [ -f $BUILD_DIR/PPAfile ]; then
+  echo "PPAfile found."
+  for PACKAGE in $(cat $BUILD_DIR/PPAfile | sed $'s/\r$//'); do
+    echo "Entry found in PPAfile for $PACKAGE."
+    BASE_URL=http://ppa.launchpad.net/${PACKAGE#ppa:}/ubuntu/
+    PACKAGE_FILE=${BASE_URL}dists/trusty/main/binary-amd64/Packages.gz
+    wget -qO - $PACKAGE_FILE | gunzip -c > /tmp/packagesList
+
+    #cat /tmp/packagesList
+
+    #for all filename attributes, download .deb files
+    awk '/Package: [^\-]*\n/{ print $0 }' RS="" FS="\n" /tmp/packagesList | grep "Filename:" | while read -r line ; do
+      echo "Installing dependency ${line#Filename: }"
+      wget -q ${BASE_URL}${line#Filename: }
+    done
+  done
+  dpkg -i *.deb
+  apt-get -fyq install
+  rm /tmp/packagesList
+else
+  echo "No PPAfile found."
+fi
+
+# ----------------------------------------------------------------------------- #
 # Install Swift dev tools & clang                                               #
 # ----------------------------------------------------------------------------- #
 # Determine Swift version for the app

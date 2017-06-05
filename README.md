@@ -255,6 +255,16 @@ $ cat Aptfile
 jsonbot
 ```
 
+#### Installing Personal Package Archives
+
+To download a dependency from a Personal Package Archive (PPA) available to the community on launchpad.net, simply include a `PPAfile` containing the references to the PPAs to be downloaded.  The buildpack will obtain the specified debian to be included
+
+```shell
+$ cat PPAfile
+ppa:myUser/myPackage
+ppa:myOtherUser/myOtherPackage
+```
+
 ### Installing closed source dependencies
 
 For those accessing private or enterprise host respositories, the IBM Bluemix buildpack for Swift now works with the Swift Package Manager to build these dependencies.  To leverage this capability, add a `.ssh` folder in the root of the application. This directory will need to contain the SSH keys needed to access the dependencies, as well as a `config` file referencing the keys. The example below shows the `config` and `Package.swift` files, respectively, which use the same SSH key to access private and public repositories in enterprise and standard GitHub accounts:
