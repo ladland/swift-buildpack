@@ -149,10 +149,10 @@ if [ -f $BUILD_DIR/PPAfile ]; then
       wget ${BASE_URL}${line#Filename: }
     done
   done
-  dpkg -i *.deb
-  apt-get -fyq install
+  #dpkg -i *.deb
+  #apt-get -fyq install
   rm /tmp/packagesList
-  rm *.deb
+  #rm *.deb
 else
   status "No PPAfile found."
 fi
