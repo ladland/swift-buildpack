@@ -141,7 +141,8 @@ if [ -f $BUILD_DIR/PPAfile ]; then
     PACKAGE_FILE=${BASE_URL}dists/trusty/main/binary-amd64/Packages.gz
     wget -qO - $PACKAGE_FILE | gunzip -c > /tmp/packagesList
 
-    #cat /tmp/packagesList
+    echo "Printing PACKAGE_FILE..."
+    cat /tmp/packagesList
 
     #for all filename attributes, download .deb files
     awk '/Package: [^\-]*\n/{ print $0 }' RS="" FS="\n" /tmp/packagesList | grep "Filename:" | while read -r line ; do

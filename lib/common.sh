@@ -148,6 +148,10 @@ install_packages() {
     for DEB in ${deb_files[@]}; do
       status "Installing $(basename $DEB)"
       dpkg -x $DEB $BUILD_DIR/.apt/
+      #testing
+      apt-get $APT_OPTIONS -fy install | indent
+      #testing
+      #apt-get $APT_OPTIONS -fyq install | indent
     done
   fi
 }
