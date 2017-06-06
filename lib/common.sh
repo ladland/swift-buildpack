@@ -149,7 +149,9 @@ install_packages() {
       status "Installing $(basename $DEB)"
       dpkg -x $DEB $BUILD_DIR/.apt/
       #testing
+      echo "About to force install..."
       apt-get $APT_OPTIONS -fy install | indent
+      echo "Done force install..."
       #testing
       #apt-get $APT_OPTIONS -fyq install | indent
     done
