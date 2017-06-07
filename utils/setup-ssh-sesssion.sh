@@ -14,8 +14,6 @@
 # limitations under the License.
 ##
 
-set -e
-
 echo "Setting HOME and TMPDIR vars"
 export HOME=/home/vcap/app
 export TMPDIR=/home/vcap/tmp
