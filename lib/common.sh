@@ -15,7 +15,7 @@
 ##
 
 # Global/common vars
-DEFAULT_SWIFT_VERSION=4.0
+DEFAULT_SWIFT_VERSION=3.1.1
 CLANG_VERSION=4.0.0
 
 error() {
